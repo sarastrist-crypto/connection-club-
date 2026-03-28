@@ -40,10 +40,10 @@ export default function MarketplacePage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
-    track: '',
-    barrier: '',
-    income_type: '',
-    category: ''
+    track: 'all',
+    barrier: 'all',
+    income_type: 'all',
+    category: 'all'
   });
 
   useEffect(() => {
@@ -66,10 +66,10 @@ export default function MarketplacePage() {
 
   const filteredPlatforms = platforms.filter(p => {
     if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    if (filters.track && !p.tracks?.includes(filters.track)) return false;
-    if (filters.barrier && p.barrier_to_entry !== filters.barrier) return false;
-    if (filters.income_type && p.income_type !== filters.income_type) return false;
-    if (filters.category && p.category !== filters.category) return false;
+    if (filters.track && filters.track !== 'all' && !p.tracks?.includes(filters.track)) return false;
+    if (filters.barrier && filters.barrier !== 'all' && p.barrier_to_entry !== filters.barrier) return false;
+    if (filters.income_type && filters.income_type !== 'all' && p.income_type !== filters.income_type) return false;
+    if (filters.category && filters.category !== 'all' && p.category !== filters.category) return false;
     return true;
   });
 
@@ -139,7 +139,7 @@ export default function MarketplacePage() {
                     <SelectValue placeholder="Track" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Tracks</SelectItem>
+                    <SelectItem value="all">All Tracks</SelectItem>
                     <SelectItem value="hospitality">Hospitality</SelectItem>
                     <SelectItem value="entry-level">Entry-Level</SelectItem>
                     <SelectItem value="career-professional">Career Pro</SelectItem>
@@ -151,7 +151,7 @@ export default function MarketplacePage() {
                     <SelectValue placeholder="Barrier" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Barriers</SelectItem>
+                    <SelectItem value="all">All Barriers</SelectItem>
                     <SelectItem value="low">Low</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="high">High</SelectItem>
@@ -163,7 +163,7 @@ export default function MarketplacePage() {
                     <SelectValue placeholder="Income Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
+                    <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="semi-passive">Semi-Passive</SelectItem>
                     <SelectItem value="passive">Passive</SelectItem>

@@ -25,7 +25,25 @@ export function AuthProvider({ children }) {
       });
       setUser(response.data);
     } catch (error) {
-      setUser(false);
+      // If access token expired, try to refresh
+      if (error.response?.status === 401) {
+        try {
+          await axios.post(`${API_URL}/api/auth/refresh`, {}, {
+            withCredentials: true
+          });
+          // Retry the me request after refresh
+          const retryResponse = await axios.get(`${API_URL}/api/auth/me`, {
+            withCredentials: true
+          });
+          setUser(retryResponse.data);
+          return;
+        } catch (refreshError) {
+          // Refresh also failed, user is not authenticated
+          setUser(false);
+        }
+      } else {
+        setUser(false);
+      }
     } finally {
       setLoading(false);
     }
