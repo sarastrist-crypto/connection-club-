@@ -10,7 +10,7 @@ import { Skeleton } from '../components/ui/skeleton';
 import {
   Search, ExternalLink, Filter, Check, X,
   Phone, MessageSquare, Mail, Briefcase, Users,
-  Globe, Smartphone, Award, DollarSign, Crown, Building2
+  Globe, Smartphone, Award, DollarSign, CreditCard, Building2
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -144,8 +144,8 @@ export default function MarketplacePage() {
                 <span className="sm:hidden">Bundles</span>
               </TabsTrigger>
               <TabsTrigger value="high-value" data-testid="tab-high-value">
-                <span className="hidden sm:inline">High-Value</span>
-                <span className="sm:hidden">Premium</span>
+                <span className="hidden sm:inline">CCP Accounts</span>
+                <span className="sm:hidden">CCP</span>
               </TabsTrigger>
             </TabsList>
 
@@ -193,12 +193,12 @@ export default function MarketplacePage() {
 
           {/* All Tab */}
           <TabsContent value="all" className="space-y-8 mt-6">
-            {/* High-Value Accounts Section */}
+            {/* CCP Accounts Section */}
             {filteredHighValue.length > 0 && (
               <div>
                 <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
-                  <span className="tier-badge tier-badge-highvalue">Premium</span>
-                  High-Value Accounts
+                  <span className="tier-badge tier-badge-highvalue">CCP</span>
+                  Credit Card Processing Accounts
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {filteredHighValue.slice(0, 2).map((account) => (
@@ -259,15 +259,15 @@ export default function MarketplacePage() {
             </div>
           </TabsContent>
 
-          {/* High-Value Tab */}
+          {/* CCP Tab */}
           <TabsContent value="high-value" className="mt-6">
-            <div className="mb-6 p-4 rounded-lg bg-amber-50 border border-amber-200">
+            <div className="mb-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
               <div className="flex items-start gap-3">
-                <Crown className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <CreditCard className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium text-amber-900">Concierge Support Available</p>
-                  <p className="text-sm text-amber-800 mt-1">
-                    High-value accounts come with dedicated ConnectClub support to help you navigate the introduction and close the deal.
+                  <p className="font-medium text-blue-900 dark:text-blue-200">Credit Card Processing Accounts</p>
+                  <p className="text-sm text-blue-800 dark:text-blue-300 mt-1">
+                    Identify businesses in your network that accept credit cards. ConnectClub provides concierge support to help navigate the merchant statement analysis and close the deal. All figures are approximates.
                   </p>
                 </div>
               </div>
@@ -417,19 +417,19 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
   const maxResidual = account.commission_tiers?.[account.commission_tiers.length - 1]?.residual || 0;
 
   return (
-    <div className="dashboard-card card-lift border-2 border-amber-200 bg-gradient-to-br from-amber-50/50 to-transparent" data-testid={`high-value-${account.id}`}>
+    <div className="dashboard-card card-lift border-2 border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50/50 dark:from-blue-950/20 to-transparent" data-testid={`high-value-${account.id}`}>
       <div className="flex items-start justify-between mb-3">
         <div>
           <span className="tier-badge tier-badge-highvalue mb-2">
-            <Crown className="w-3 h-3 mr-1" /> High-Value
+            <CreditCard className="w-3 h-3 mr-1" /> CCP
           </span>
           <h3 className="font-medium text-lg">{account.name}</h3>
         </div>
         <div className="text-right">
-          <div className="commission-amount text-lg text-amber-600">
-            ${minCommission.toLocaleString()} - ${maxCommission.toLocaleString()}
+          <div className="commission-amount text-lg text-blue-600">
+            ~${minCommission.toLocaleString()} - ${maxCommission.toLocaleString()}
           </div>
-          <div className="text-xs text-muted-foreground">commission range</div>
+          <div className="text-xs text-muted-foreground">approx. commission range</div>
         </div>
       </div>
 
@@ -438,7 +438,7 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
       {expanded && (
         <>
           <div className="p-3 rounded-lg bg-muted/50 mb-4">
-            <p className="text-xs text-muted-foreground mb-1">Target profile:</p>
+            <p className="text-xs text-muted-foreground mb-1">Target merchant profile:</p>
             <p className="text-sm">{account.target_profile}</p>
           </div>
           <div className="p-3 rounded-lg bg-muted/50 mb-4">
@@ -453,7 +453,7 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
         {account.services?.slice(0, expanded ? undefined : 3).map((service) => {
           const Icon = SERVICE_ICONS[service] || Briefcase;
           return (
-            <span key={service} className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-amber-100 text-amber-800">
+            <span key={service} className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
               <Icon className="w-3 h-3" />
               {service}
             </span>
@@ -467,11 +467,11 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
       </div>
 
       {/* Contract value */}
-      <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 mb-4">
+      <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 mb-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-amber-800">Contract Value Range</span>
-          <span className="commission-amount text-amber-900">
-            ${account.contract_value_min?.toLocaleString()} - ${account.contract_value_max?.toLocaleString()}
+          <span className="text-blue-800 dark:text-blue-300">Est. Processing Volume Range</span>
+          <span className="commission-amount text-blue-900 dark:text-blue-200">
+            ~${account.contract_value_min?.toLocaleString()} - ${account.contract_value_max?.toLocaleString()}
           </span>
         </div>
       </div>
@@ -479,7 +479,7 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
       {/* Commission tiers */}
       {expanded && account.commission_tiers && (
         <div className="mb-4">
-          <p className="text-xs text-muted-foreground mb-2">Commission Tiers:</p>
+          <p className="text-xs text-muted-foreground mb-2">Approx. Commission Tiers:</p>
           <div className="space-y-2">
             {account.commission_tiers.map((tier, index) => {
               const tierKey = Object.keys(tier).find(k => k !== 'commission' && k !== 'residual');
@@ -487,9 +487,9 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
                 <div key={index} className="flex items-center justify-between p-2 rounded bg-muted/50 text-sm">
                   <span className="capitalize">{tierKey}: {tier[tierKey]}</span>
                   <div className="text-right">
-                    <span className="commission-amount text-primary">${tier.commission.toLocaleString()}</span>
+                    <span className="commission-amount text-primary">~${tier.commission.toLocaleString()}</span>
                     <span className="text-muted-foreground mx-1">+</span>
-                    <span className="commission-amount text-emerald-600">${tier.residual}/mo</span>
+                    <span className="commission-amount text-emerald-600">~${tier.residual}/mo</span>
                   </div>
                 </div>
               );
@@ -502,23 +502,25 @@ function HighValueCard({ account, expanded = false, onRequestConcierge }) {
       {!expanded && (
         <div className="grid grid-cols-2 gap-2 text-center text-xs border-t border-border pt-3 mb-4">
           <div>
-            <div className="commission-amount text-primary">${minCommission.toLocaleString()}+</div>
-            <div className="text-muted-foreground">At Close</div>
+            <div className="commission-amount text-primary">~${minCommission.toLocaleString()}+</div>
+            <div className="text-muted-foreground">Approx. Close</div>
           </div>
           <div>
-            <div className="commission-amount text-emerald-600">${minResidual}+/mo</div>
-            <div className="text-muted-foreground">Residual</div>
+            <div className="commission-amount text-emerald-600">~${minResidual}+/mo</div>
+            <div className="text-muted-foreground">Est. Residual</div>
           </div>
         </div>
       )}
 
+      <p className="text-xs text-muted-foreground mb-3 italic">All proc and monthly figures are approximates based on volume.</p>
+
       <Button 
-        className="w-full bg-amber-600 hover:bg-amber-700" 
+        className="w-full bg-blue-600 hover:bg-blue-700" 
         onClick={onRequestConcierge}
         data-testid={`request-concierge-${account.id}`}
       >
-        <Crown className="w-4 h-4 mr-2" />
-        Request Concierge Support
+        <CreditCard className="w-4 h-4 mr-2" />
+        Request Merchant Analysis
       </Button>
     </div>
   );

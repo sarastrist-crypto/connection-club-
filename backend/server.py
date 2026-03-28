@@ -786,35 +786,21 @@ PROMOTIONS = [
         "commission_close": "~$50 - $100",
         "commission_residual": "~$60/month per active agent",
         "commission_percent": "~15% Residual on Monthly Billing",
-        "priority": 1
-    },
-    {
-        "id": "menio-global",
-        "name": "Menio Global Credit Processing",
-        "headline": "Stop the Profit Leak. Reduce Processing Fees by 30%.",
-        "subtext": "Special ConnectClub Merchant Rates. Zero setup fees for Menio Global partners.",
-        "cta_label": "Audit My Rates",
-        "cta_url": "#menio-global",
-        "target_industries": ["e-commerce", "retail", "food-beverage", "hospitality"],
-        "target_tracks": ["career-professional", "young-professional"],
-        "commission_close": "~$150 - $300",
-        "commission_residual": "~$100 - $1,000+/mo",
-        "commission_percent": "~25% of Net Residual Profit",
         "priority": 2
     },
     {
-        "id": "imago-imaging",
-        "name": "Imago Imaging",
-        "headline": "Diagnostic AI for the Modern Practice.",
-        "subtext": "Enhance your Imago Imaging workflow. High-definition AI overlays for superior patient care.",
-        "cta_label": "Upgrade My Imaging",
-        "cta_url": "#imago-imaging",
-        "target_industries": ["healthcare", "education"],
-        "target_tracks": ["career-professional"],
-        "commission_close": "~$1,000 - $2,500",
-        "commission_residual": "~$5 - $10/scan",
-        "commission_percent": "~10% Enterprise License Fee",
-        "priority": 3
+        "id": "ccp-merchant-services",
+        "name": "Credit Card Processing Services",
+        "headline": "Your Network is Full of Merchants Overpaying on Processing.",
+        "subtext": "Interchange-plus pricing, PCI compliance, and POS integration. Help businesses save 20-30% on fees.",
+        "cta_label": "Explore CCP Opportunity",
+        "cta_url": "/marketplace?tab=high-value",
+        "target_industries": ["hospitality", "food-beverage", "retail", "e-commerce", "healthcare", "construction", "real-estate"],
+        "target_tracks": ["hospitality", "career-professional", "young-professional"],
+        "commission_close": "~$150 - $500",
+        "commission_residual": "~$100 - $1,000+/mo",
+        "commission_percent": "~25% of Net Residual Profit",
+        "priority": 1
     }
 ]
 
@@ -1130,6 +1116,176 @@ async def get_network_graph(user: dict = Depends(get_current_user)):
         "edges": edges,
         "stats": stats
     }
+
+# ===================== NETWORK CONTACTS (Import & Verification) =====================
+
+class ContactImport(BaseModel):
+    name: str
+    business_name: Optional[str] = ""
+    industry: Optional[str] = ""
+    email: Optional[str] = ""
+    phone: Optional[str] = ""
+    source: str = "manual"  # manual, linkedin, facebook, instagram, csv
+
+class ContactVerify(BaseModel):
+    verified: bool
+
+class ContactOptIn(BaseModel):
+    opted_in: bool
+
+@api_router.get("/network/contacts")
+async def get_network_contacts(user: dict = Depends(get_current_user)):
+    user_id = user["_id"]
+    contacts = await db.network_contacts.find(
+        {"user_id": user_id}, {"_id": 0}
+    ).sort("created_at", -1).to_list(500)
+    
+    stats = {
+        "total": len(contacts),
+        "opted_in": len([c for c in contacts if c.get("opted_in")]),
+        "verified": len([c for c in contacts if c.get("verified")]),
+        "flagged": len([c for c in contacts if c.get("ccp_flagged")]),
+    }
+    return {"contacts": contacts, "stats": stats}
+
+@api_router.post("/network/contacts")
+async def add_contact(data: ContactImport, user: dict = Depends(get_current_user)):
+    user_id = user["_id"]
+    contact = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "name": data.name,
+        "business_name": data.business_name,
+        "industry": data.industry,
+        "email": data.email,
+        "phone": data.phone,
+        "source": data.source,
+        "opted_in": False,
+        "verified": False,
+        "ccp_flagged": False,
+        "ccp_analysis": None,
+        "notifications_sent": [],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.network_contacts.insert_one(contact)
+    return {"id": contact["id"], "message": "Contact added"}
+
+@api_router.post("/network/contacts/bulk")
+async def bulk_import_contacts(contacts: List[ContactImport], user: dict = Depends(get_current_user)):
+    user_id = user["_id"]
+    docs = []
+    for c in contacts:
+        docs.append({
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "name": c.name,
+            "business_name": c.business_name,
+            "industry": c.industry,
+            "email": c.email,
+            "phone": c.phone,
+            "source": c.source,
+            "opted_in": False,
+            "verified": False,
+            "ccp_flagged": False,
+            "ccp_analysis": None,
+            "notifications_sent": [],
+            "created_at": datetime.now(timezone.utc).isoformat()
+        })
+    if docs:
+        await db.network_contacts.insert_many(docs)
+    return {"imported": len(docs), "message": f"{len(docs)} contacts imported"}
+
+@api_router.patch("/network/contacts/{contact_id}/opt-in")
+async def toggle_opt_in(contact_id: str, data: ContactOptIn, user: dict = Depends(get_current_user)):
+    result = await db.network_contacts.update_one(
+        {"id": contact_id, "user_id": user["_id"]},
+        {"$set": {"opted_in": data.opted_in}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return {"message": "Opt-in updated"}
+
+@api_router.patch("/network/contacts/{contact_id}/verify")
+async def verify_contact(contact_id: str, data: ContactVerify, user: dict = Depends(get_current_user)):
+    result = await db.network_contacts.update_one(
+        {"id": contact_id, "user_id": user["_id"]},
+        {"$set": {"verified": data.verified}}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Contact not found")
+
+    # If verified, run CCP opportunity analysis
+    if data.verified:
+        contact = await db.network_contacts.find_one({"id": contact_id}, {"_id": 0})
+        ccp_match = False
+        analysis = {}
+
+        if contact:
+            biz = (contact.get("business_name", "") + " " + contact.get("industry", "")).lower()
+            ccp_keywords = ["restaurant", "retail", "store", "shop", "cafe", "bar", "hotel",
+                           "salon", "spa", "gym", "clinic", "dental", "medical", "food",
+                           "merchant", "ecommerce", "e-commerce", "hospitality", "service",
+                           "auto", "repair", "contractor", "construction", "real estate"]
+            
+            if any(kw in biz for kw in ccp_keywords):
+                ccp_match = True
+                analysis = {
+                    "match_probability": "High",
+                    "service": "Merchant Account & Payment Gateway Optimization",
+                    "estimated_volume": "Approx. $10K - $100K+/mo",
+                    "potential_residual": "Approx. $100 - $500+/mo",
+                    "rationale": f"Business profile for {contact.get('business_name', contact['name'])} indicates active card-present or card-not-present transactions. Interchange-plus repricing and POS integration could yield significant processing fee savings.",
+                    "analyzed_at": datetime.now(timezone.utc).isoformat()
+                }
+            else:
+                analysis = {
+                    "match_probability": "Low",
+                    "rationale": "Business profile does not indicate high credit card processing volume. May still qualify — consider manual review.",
+                    "analyzed_at": datetime.now(timezone.utc).isoformat()
+                }
+
+            await db.network_contacts.update_one(
+                {"id": contact_id},
+                {"$set": {"ccp_flagged": ccp_match, "ccp_analysis": analysis}}
+            )
+
+            if ccp_match:
+                # Create dashboard notification
+                await db.notifications.insert_one({
+                    "id": str(uuid.uuid4()),
+                    "user_id": user["_id"],
+                    "type": "ccp_opportunity",
+                    "title": f"CCP Opportunity Flagged for {contact['name']}",
+                    "body": f"Emergent has identified a Merchant Service match for {contact['name']}. View the processing breakdown on your dashboard.",
+                    "contact_id": contact_id,
+                    "contact_name": contact["name"],
+                    "read": False,
+                    "created_at": datetime.now(timezone.utc).isoformat()
+                })
+
+    return {"message": "Contact verified" if data.verified else "Verification removed", "ccp_flagged": data.verified}
+
+@api_router.delete("/network/contacts/{contact_id}")
+async def delete_contact(contact_id: str, user: dict = Depends(get_current_user)):
+    result = await db.network_contacts.delete_one({"id": contact_id, "user_id": user["_id"]})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return {"message": "Contact deleted"}
+
+@api_router.get("/notifications")
+async def get_notifications(user: dict = Depends(get_current_user)):
+    notifs = await db.notifications.find(
+        {"user_id": user["_id"]}, {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    return {"notifications": notifs}
+
+@api_router.patch("/notifications/{notif_id}/read")
+async def mark_notification_read(notif_id: str, user: dict = Depends(get_current_user)):
+    await db.notifications.update_one(
+        {"id": notif_id, "user_id": user["_id"]},
+        {"$set": {"read": True}}
+    )
+    return {"message": "Marked as read"}
 
 # ===================== COMMISSION TRACKER ROUTES =====================
 
@@ -1623,6 +1779,8 @@ async def startup_event():
     await db.password_reset_tokens.create_index("token")
     await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
     await db.promotion_clicks.create_index("user_id")
+    await db.network_contacts.create_index([("user_id", 1), ("created_at", -1)])
+    await db.notifications.create_index([("user_id", 1), ("created_at", -1)])
     
     # Seed data
     await seed_admin(db)

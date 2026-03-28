@@ -2,20 +2,18 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { useAuth } from '../context/AuthContext';
-import { ChevronLeft, ChevronRight, X, Zap, CreditCard, Microscope } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Zap, CreditCard } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const PROMO_ICONS = {
   'connectclub-va': Zap,
-  'menio-global': CreditCard,
-  'imago-imaging': Microscope,
+  'ccp-merchant-services': CreditCard,
 };
 
 const PROMO_ACCENTS = {
   'connectclub-va': { bg: 'from-emerald-900/90 to-emerald-800/80', border: 'border-emerald-500/30', btn: 'bg-emerald-500 hover:bg-emerald-400 text-white' },
-  'menio-global': { bg: 'from-blue-900/90 to-blue-800/80', border: 'border-blue-500/30', btn: 'bg-blue-500 hover:bg-blue-400 text-white' },
-  'imago-imaging': { bg: 'from-violet-900/90 to-violet-800/80', border: 'border-violet-500/30', btn: 'bg-violet-500 hover:bg-violet-400 text-white' },
+  'ccp-merchant-services': { bg: 'from-blue-900/90 to-blue-800/80', border: 'border-blue-500/30', btn: 'bg-blue-500 hover:bg-blue-400 text-white' },
 };
 
 export default function RevenueBanner() {

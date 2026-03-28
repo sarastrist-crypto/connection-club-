@@ -8,7 +8,7 @@ import { Progress } from '../components/ui/progress';
 import { Skeleton } from '../components/ui/skeleton';
 import {
   DollarSign, TrendingUp, Clock, ChevronRight,
-  Briefcase, AlertTriangle, Users, ExternalLink
+  Briefcase, AlertTriangle, CreditCard, ExternalLink, Zap, Bell
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -16,6 +16,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -32,6 +33,17 @@ export default function DashboardPage() {
     };
     fetchDashboard();
   }, []);
+
+  useEffect(() => {
+    if (!data) return;
+    const fetchNotifications = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/notifications`, { withCredentials: true });
+        setNotifications((res.data.notifications || []).filter(n => !n.read).slice(0, 3));
+      } catch (err) {}
+    };
+    fetchNotifications();
+  }, [data]);
 
   if (loading) {
     return (
@@ -51,7 +63,6 @@ export default function DashboardPage() {
   const earnings = data?.earnings || { total_earned: 0, active_residual: 0, pending: 0, monthly_goal: 2000, progress: 0 };
   const topMatches = data?.top_matches || [];
   const recentIntros = data?.recent_introductions || [];
-  const networkCredits = data?.network_credits || { available: 0, this_month: 0 };
 
   return (
     <Layout>
@@ -169,25 +180,36 @@ export default function DashboardPage() {
 
           {/* Side Panel */}
           <div className="space-y-6">
-            {/* Network Credits */}
-            <div className="dashboard-card" data-testid="network-credits-card">
+            {/* CCP Opportunities */}
+            <div className="dashboard-card" data-testid="ccp-opportunities-card">
               <div className="flex items-center gap-3 mb-4">
-                <Users className="w-5 h-5 text-muted-foreground" />
-                <h2 className="font-medium">Network Credits</h2>
+                <CreditCard className="w-5 h-5 text-amber-600" />
+                <h2 className="font-medium">CCP Opportunities</h2>
               </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Available</span>
-                  <span className="commission-amount">{networkCredits.available}</span>
+              {notifications.length > 0 ? (
+                <div className="space-y-3">
+                  {notifications.map((notif) => (
+                    <div key={notif.id} className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800" data-testid={`ccp-notif-${notif.id}`}>
+                      <div className="flex items-start gap-2">
+                        <Zap className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-sm font-medium">{notif.contact_name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Merchant Service match identified. View breakdown in My Network.</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">This Month</span>
-                  <span className="commission-amount text-emerald-600">+{networkCredits.this_month}</span>
+              ) : (
+                <div className="text-center py-4">
+                  <Bell className="w-8 h-8 mx-auto text-muted-foreground/40 mb-2" />
+                  <p className="text-sm text-muted-foreground">No active CCP flags yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">Import contacts in My Network to begin</p>
                 </div>
-              </div>
+              )}
               <Link to="/network" className="block mt-4">
                 <Button variant="outline" size="sm" className="w-full">
-                  View Network
+                  Open My Network
                 </Button>
               </Link>
             </div>
