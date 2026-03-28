@@ -49,6 +49,46 @@
     --chart-4: 19 35% 54%;
     --chart-5: 14 56% 51%;
   }
+
+  .dark {
+    --background: 160 20% 6%;
+    --foreground: 40 12% 88%;
+    --card: 160 16% 10%;
+    --card-foreground: 40 12% 88%;
+    --popover: 160 16% 10%;
+    --popover-foreground: 40 12% 88%;
+    --primary: 145 40% 50%;
+    --primary-foreground: 160 20% 6%;
+    --secondary: 160 12% 16%;
+    --secondary-foreground: 40 12% 88%;
+    --muted: 160 10% 18%;
+    --muted-foreground: 150 8% 58%;
+    --accent: 14 56% 51%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 51% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 160 10% 20%;
+    --input: 160 10% 20%;
+    --ring: 145 40% 50%;
+
+    --sage: 145 9% 51%;
+    --clay: 19 35% 54%;
+    --ochre: 38 61% 57%;
+
+    --success: 153 54% 40%;
+    --warning: 38 79% 56%;
+    --error: 1 60% 55%;
+
+    --tier-gig: 215 14% 55%;
+    --tier-bundled: 217 55% 55%;
+    --tier-highvalue: 38 79% 56%;
+
+    --chart-1: 145 40% 50%;
+    --chart-2: 145 9% 51%;
+    --chart-3: 38 61% 57%;
+    --chart-4: 19 35% 54%;
+    --chart-5: 14 56% 51%;
+  }
 }
 
 @layer base {
@@ -130,11 +170,6 @@
   /* Overline text style */
   .overline {
     @apply text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground;
-  }
-  
-  /* Glass effect for headers */
-  .glass-header {
-    @apply bg-white/70 backdrop-blur-xl border-b border-white/40;
   }
   
   /* Sidebar styles */
@@ -250,7 +285,45 @@
   .tax-callout-success {
     @apply bg-emerald-50 border-emerald-500 text-emerald-900;
   }
+
+  /* Glass effect for headers */
+  .glass-header {
+    @apply bg-white/70 backdrop-blur-xl border-b border-white/40;
+  }
 }
+
+/* Dark mode overrides for hard-coded colors */
+.dark .tax-callout-warning {
+  @apply bg-amber-950/40 border-amber-600 text-amber-200;
+}
+.dark .tax-callout-info {
+  @apply bg-blue-950/40 border-blue-500 text-blue-200;
+}
+.dark .tax-callout-success {
+  @apply bg-emerald-950/40 border-emerald-500 text-emerald-200;
+}
+.dark .glass-header {
+  @apply bg-black/50 backdrop-blur-xl border-b border-white/10;
+}
+.dark .bg-emerald-50 { @apply bg-emerald-950/30; }
+.dark .bg-amber-50 { @apply bg-amber-950/30; }
+.dark .bg-blue-50 { @apply bg-blue-950/30; }
+.dark .bg-violet-50 { @apply bg-violet-950/30; }
+.dark .bg-amber-100 { @apply bg-amber-900/30; }
+.dark .bg-blue-100 { @apply bg-blue-900/30; }
+.dark .bg-violet-100 { @apply bg-violet-900/30; }
+.dark .text-amber-700 { @apply text-amber-300; }
+.dark .text-blue-700 { @apply text-blue-300; }
+.dark .text-amber-900 { @apply text-amber-200; }
+.dark .text-blue-900 { @apply text-blue-200; }
+.dark .text-violet-900 { @apply text-violet-200; }
+.dark .text-violet-700 { @apply text-violet-300; }
+.dark .text-amber-800 { @apply text-amber-300; }
+.dark .border-blue-200 { @apply border-blue-800; }
+.dark .border-violet-200 { @apply border-violet-800; }
+.dark .border-blue-100 { @apply border-blue-900; }
+.dark .border-violet-100 { @apply border-violet-900; }
+.dark .border-amber-200 { @apply border-amber-800; }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

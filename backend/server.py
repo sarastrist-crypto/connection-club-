@@ -783,9 +783,9 @@ PROMOTIONS = [
         "cta_url": "/marketplace",
         "target_industries": ["hospitality", "food-beverage", "construction", "real-estate"],
         "target_tracks": ["hospitality", "career-professional"],
-        "commission_close": "$50 - $100",
-        "commission_residual": "$60/month per active agent",
-        "commission_percent": "15% Residual on Monthly Billing",
+        "commission_close": "~$50 - $100",
+        "commission_residual": "~$60/month per active agent",
+        "commission_percent": "~15% Residual on Monthly Billing",
         "priority": 1
     },
     {
@@ -797,9 +797,9 @@ PROMOTIONS = [
         "cta_url": "#menio-global",
         "target_industries": ["e-commerce", "retail", "food-beverage", "hospitality"],
         "target_tracks": ["career-professional", "young-professional"],
-        "commission_close": "$150 - $300",
-        "commission_residual": "$100 - $1,000+/mo",
-        "commission_percent": "25% of Net Residual Profit",
+        "commission_close": "~$150 - $300",
+        "commission_residual": "~$100 - $1,000+/mo",
+        "commission_percent": "~25% of Net Residual Profit",
         "priority": 2
     },
     {
@@ -811,9 +811,9 @@ PROMOTIONS = [
         "cta_url": "#imago-imaging",
         "target_industries": ["healthcare", "education"],
         "target_tracks": ["career-professional"],
-        "commission_close": "$1,000 - $2,500",
-        "commission_residual": "$5 - $10/scan",
-        "commission_percent": "10% Enterprise License Fee",
+        "commission_close": "~$1,000 - $2,500",
+        "commission_residual": "~$5 - $10/scan",
+        "commission_percent": "~10% Enterprise License Fee",
         "priority": 3
     }
 ]
@@ -1353,7 +1353,7 @@ async def seed_platforms(db_instance):
     logging.info(f"Seeded {len(platforms)} platforms")
 
 async def seed_bundles(db_instance):
-    """Seed HLS service bundles"""
+    """Seed professional service bundles"""
     existing = await db_instance.bundles.count_documents({})
     if existing > 0:
         return

@@ -118,13 +118,13 @@ export default function CommissionsPage() {
               <p className="text-sm text-blue-700">of Net Residual Profit</p>
             </div>
             <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
-              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Closing Payout</p>
-              <p className="text-2xl font-bold text-blue-900">$150 - $300</p>
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Approx. Closing Payout</p>
+              <p className="text-2xl font-bold text-blue-900">~$150 - $300</p>
               <p className="text-sm text-blue-700">Upfront equipment commission</p>
             </div>
             <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
-              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Monthly Residual</p>
-              <p className="text-2xl font-bold text-emerald-700">$100 - $1,000+</p>
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Est. Monthly Residual</p>
+              <p className="text-2xl font-bold text-emerald-700">~$100 - $1,000+</p>
               <p className="text-sm text-blue-700">Based on merchant volume</p>
             </div>
           </div>
@@ -206,13 +206,13 @@ export default function CommissionsPage() {
               <p className="text-sm text-violet-700">Enterprise License Fee</p>
             </div>
             <div className="p-4 rounded-lg bg-violet-50 border border-violet-100">
-              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Closing Payout</p>
-              <p className="text-2xl font-bold text-violet-900">$1,000 - $2,500</p>
+              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Approx. Closing Payout</p>
+              <p className="text-2xl font-bold text-violet-900">~$1,000 - $2,500</p>
               <p className="text-sm text-violet-700">High-ticket software sale</p>
             </div>
             <div className="p-4 rounded-lg bg-violet-50 border border-violet-100">
-              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Per-Scan Residual</p>
-              <p className="text-2xl font-bold text-emerald-700">$5 - $10</p>
+              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Est. Per-Scan Residual</p>
+              <p className="text-2xl font-bold text-emerald-700">~$5 - $10</p>
               <p className="text-sm text-violet-700">Per "Scan-as-a-Service" transaction</p>
             </div>
           </div>
@@ -298,9 +298,9 @@ export default function CommissionsPage() {
                       <p className="text-xs text-muted-foreground">{new Date(item.created_at).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
-                      <div className="commission-amount text-emerald-600">${item.commission_at_close}</div>
+                      <div className="commission-amount text-emerald-600">~${item.commission_at_close}</div>
                       {item.monthly_residual > 0 && (
-                        <div className="text-xs text-emerald-600">+${item.monthly_residual}/mo</div>
+                        <div className="text-xs text-emerald-600">+~${item.monthly_residual}/mo</div>
                       )}
                     </div>
                   </div>
@@ -335,8 +335,8 @@ export default function CommissionsPage() {
                       </span>
                     </div>
                     <div className="text-right">
-                      <div className="commission-amount">${item.commission_at_close}</div>
-                      <div className="text-xs text-muted-foreground">potential</div>
+                      <div className="commission-amount">~${item.commission_at_close}</div>
+                      <div className="text-xs text-muted-foreground">est. potential</div>
                     </div>
                   </div>
                 ))}

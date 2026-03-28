@@ -5,7 +5,7 @@ export default function ConnectClubLogo({ className = "h-14" }) {
     <img 
       src="/logo.svg" 
       alt="ConnectClub - Your Network. Your Income." 
-      className={className}
+      className={`${className} dark:brightness-[2] dark:contrast-[0.85] transition-[filter] duration-300`}
     />
   );
 }
@@ -16,7 +16,7 @@ export function ConnectClubShield({ className = "h-14" }) {
     <img 
       src="/logo.svg" 
       alt="ConnectClub" 
-      className={className}
+      className={`${className} dark:brightness-[2] dark:contrast-[0.85] transition-[filter] duration-300`}
       style={{ objectFit: 'contain' }}
     />
   );

@@ -105,10 +105,10 @@ export default function RevenueBanner() {
             </p>
             <div className="flex items-center gap-4 mt-1.5">
               <span className="text-xs text-white/50">
-                At Close: <span className="text-amber-300 font-medium">{promo.commission_close}</span>
+                Approx. Close: <span className="text-amber-300 font-medium">{promo.commission_close}</span>
               </span>
               <span className="text-xs text-white/50">
-                Residual: <span className="text-emerald-300 font-medium">{promo.commission_residual}</span>
+                Est. Residual: <span className="text-emerald-300 font-medium">{promo.commission_residual}</span>
               </span>
             </div>
           </div>

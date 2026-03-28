@@ -1,7 +1,7 @@
 # ConnectClub - Product Requirements Document
 
 ## Original Problem Statement
-Build ConnectClub — a professional opportunity platform that operates at the intersection of curated gig and freelance income, self-employment tax management, and a network that pays the people who build it. It runs on a "Meal Kit" model for bundled opportunities through HLS (Hire Live Support).
+Build ConnectClub — a professional opportunity platform that operates at the intersection of curated gig and freelance income, self-employment tax management, and a network that pays the people who build it. It features bundled professional solutions to attract and serve business contacts in members' networks.
 
 ## Architecture
 - **Frontend**: React with Tailwind CSS, Shadcn UI components, react-force-graph-2d
@@ -46,7 +46,7 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 - [x] Password reset flow (forgot password + reset with token)
 - [x] 5-step onboarding with match reveal
 - [x] Dashboard with earnings summary, top matches, activity tracker
-- [x] Opportunity Marketplace with 14 gig platforms, 7 HLS bundles, 5 high-value accounts
+- [x] Opportunity Marketplace with 14 gig platforms, 7 bundled solutions, 5 high-value accounts
 - [x] Introduction Flow (4-step) with editable message templates
 - [x] Tax Center with income/deduction tracking, quarterly estimates
 - [x] Network Credits dashboard with referral system
@@ -57,7 +57,7 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 
 ### Database Seeding
 - 14 gig platforms across Hospitality, Entry-Level, Career Professional tracks
-- 7 HLS Meal Kit bundles
+- 7 bundled professional solutions
 - 5 high-value accounts (Multi-Location Franchise, Property Mgmt, Regional Retailer, Healthcare Practice, Enterprise Service)
 - 5 education content items
 - Admin user pre-created

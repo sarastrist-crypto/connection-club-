@@ -212,7 +212,7 @@ export default function MarketplacePage() {
             <div>
               <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
                 <span className="tier-badge tier-badge-bundled">Bundled</span>
-                HLS Meal Kits
+                Bundled Solutions
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredBundles.map((bundle) => (
@@ -356,8 +356,8 @@ function BundleCard({ bundle, expanded = false }) {
           <h3 className="font-medium text-lg">{bundle.name}</h3>
         </div>
         <div className="text-right">
-          <div className="commission-amount text-lg text-primary">${bundle.commission_at_close}</div>
-          <div className="text-xs text-muted-foreground">at close</div>
+          <div className="commission-amount text-lg text-primary">~${bundle.commission_at_close}</div>
+          <div className="text-xs text-muted-foreground">approx. at close</div>
         </div>
       </div>
 
@@ -390,16 +390,16 @@ function BundleCard({ bundle, expanded = false }) {
       {/* Commission breakdown */}
       <div className="grid grid-cols-3 gap-2 text-center text-xs border-t border-border pt-3 mb-4">
         <div>
-          <div className="commission-amount text-primary">${bundle.commission_at_close}</div>
-          <div className="text-muted-foreground">At Close</div>
+          <div className="commission-amount text-primary">~${bundle.commission_at_close}</div>
+          <div className="text-muted-foreground">Approx. Close</div>
         </div>
         <div>
-          <div className="commission-amount text-primary">${bundle.monthly_residual}/mo</div>
-          <div className="text-muted-foreground">Residual</div>
+          <div className="commission-amount text-primary">~${bundle.monthly_residual}/mo</div>
+          <div className="text-muted-foreground">Est. Residual</div>
         </div>
         <div>
-          <div className="commission-amount text-emerald-600">${bundle.twelve_month_value}</div>
-          <div className="text-muted-foreground">12-Month</div>
+          <div className="commission-amount text-emerald-600">~${bundle.twelve_month_value}</div>
+          <div className="text-muted-foreground">Est. 12-Month</div>
         </div>
       </div>
 

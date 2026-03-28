@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/button';
 import ConnectClubLogo, { ConnectClubShield } from './ConnectClubLogo';
+import DarkModeToggle from './DarkModeToggle';
 import {
   LayoutDashboard,
   Briefcase,
@@ -114,9 +115,12 @@ export default function Layout({ children }) {
 
           {/* User section */}
           <div className="pt-4 border-t border-border">
-            <div className="px-4 py-2">
-              <p className="font-medium text-sm truncate">{user?.name || 'Member'}</p>
-              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            <div className="flex items-center justify-between px-4 py-2">
+              <div className="min-w-0">
+                <p className="font-medium text-sm truncate">{user?.name || 'Member'}</p>
+                <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+              </div>
+              <DarkModeToggle />
             </div>
             <Button
               variant="ghost"
