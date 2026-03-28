@@ -55,7 +55,7 @@ export default function CommissionsPage() {
       <div className="space-y-6" data-testid="commissions-page">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-medium tracking-tight">Commission Tracker</h1>
+          <h1 className="text-4xl font-medium tracking-tight">Commission Tracker</h1>
           <p className="text-muted-foreground mt-1">Track your earnings and residual income</p>
         </div>
 
@@ -97,7 +97,7 @@ export default function CommissionsPage() {
 
         {/* Progress to Goals */}
         <div className="dashboard-card">
-          <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
             <Target className="w-5 h-5" /> Income Goals
           </h2>
           <div className="space-y-4">
@@ -129,7 +129,7 @@ export default function CommissionsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Earned */}
           <div className="dashboard-card" data-testid="earned-list">
-            <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
               <Award className="w-5 h-5 text-emerald-600" /> Earned Commissions
             </h2>
             {earned.length === 0 ? (
@@ -160,7 +160,7 @@ export default function CommissionsPage() {
 
           {/* Pending */}
           <div className="dashboard-card" data-testid="pending-list">
-            <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+            <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-600" /> In Pipeline
             </h2>
             {pending.length === 0 ? (

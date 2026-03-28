@@ -157,9 +157,9 @@ export default function OnboardingPage() {
         <div className="max-w-2xl w-full">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-6">
-              <ConnectClubLogo className="h-16" />
+              <ConnectClubLogo className="h-24" />
             </div>
-            <h1 className="text-3xl font-medium tracking-tight mb-2">Here's where you start</h1>
+            <h1 className="text-4xl font-medium tracking-tight mb-2">Here's where you start</h1>
             <p className="text-muted-foreground">Based on your network, these opportunities are your best match</p>
           </div>
 
@@ -227,7 +227,7 @@ export default function OnboardingPage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-card border-b border-border z-50">
         <div className="max-w-2xl mx-auto px-6 py-3 flex items-center justify-between">
-          <ConnectClubLogo className="h-12" />
+          <ConnectClubLogo className="h-16" />
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">Step {step} of 5</span>
             <Progress value={(step / 5) * 100} className="w-24 h-2" />
@@ -242,7 +242,7 @@ export default function OnboardingPage() {
           {step === 1 && (
             <div className="space-y-8" data-testid="onboarding-step-1">
               <div>
-                <h1 className="text-3xl font-medium tracking-tight mb-2">Let's get to know you</h1>
+                <h1 className="text-4xl font-medium tracking-tight mb-2">Let's get to know you</h1>
                 <p className="text-muted-foreground">We'll use this to personalize your experience</p>
               </div>
 
@@ -312,7 +312,7 @@ export default function OnboardingPage() {
           {step === 2 && (
             <div className="space-y-8" data-testid="onboarding-step-2">
               <div>
-                <h1 className="text-3xl font-medium tracking-tight mb-2">Who do you know?</h1>
+                <h1 className="text-4xl font-medium tracking-tight mb-2">Who do you know?</h1>
                 <p className="text-muted-foreground">Select industries where you have connections</p>
               </div>
 
@@ -349,7 +349,7 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div className="space-y-8" data-testid="onboarding-step-3">
               <div>
-                <h1 className="text-3xl font-medium tracking-tight mb-2">How well do you know them?</h1>
+                <h1 className="text-4xl font-medium tracking-tight mb-2">How well do you know them?</h1>
                 <p className="text-muted-foreground">Tell us about your relationship depth in each industry</p>
               </div>
 
@@ -395,7 +395,7 @@ export default function OnboardingPage() {
           {step === 4 && (
             <div className="space-y-8" data-testid="onboarding-step-4">
               <div>
-                <h1 className="text-3xl font-medium tracking-tight mb-2">What's your income goal?</h1>
+                <h1 className="text-4xl font-medium tracking-tight mb-2">What's your income goal?</h1>
                 <p className="text-muted-foreground">Monthly target from ConnectClub opportunities</p>
               </div>
 
@@ -430,7 +430,7 @@ export default function OnboardingPage() {
           {step === 5 && (
             <div className="space-y-8" data-testid="onboarding-step-5">
               <div>
-                <h1 className="text-3xl font-medium tracking-tight mb-2">Almost there!</h1>
+                <h1 className="text-4xl font-medium tracking-tight mb-2">Almost there!</h1>
                 <p className="text-muted-foreground">Help us match you with the right opportunities</p>
               </div>
 

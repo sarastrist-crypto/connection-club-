@@ -8,7 +8,7 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 - **Backend**: FastAPI with MongoDB (Motor async driver)
 - **Authentication**: JWT-based auth + Emergent Google OAuth + Password Reset
 - **Design System**: Forest green primary (#0F3D22), Gold accents (#D4A017)
-- **Logo**: Custom shield with dollar sign and "ConnectClub" wordmark
+- **Logo**: Custom SVG shield with gold dollar sign, forest green body, "ConnectClub" serif wordmark, and "YOUR NETWORK. YOUR INCOME." tagline
 
 ## User Personas
 1. **Hospitality Professional**: Experience in restaurants, hotels, events
@@ -29,6 +29,12 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 10. User Submission Form
 
 ## What's Been Implemented
+
+### March 28, 2026 - Logo & Font Update
+- [x] Updated logo to premium SVG with gold shield, serif wordmark, and tagline
+- [x] Increased all logo sizes globally (sidebar h-20, auth pages h-24, headers h-16)
+- [x] Increased base body font to 17px, h1 to text-4xl, h2 to text-xl, hero text to text-5xl
+- [x] Bumped sidebar nav, tier badges, overline text sizes
 
 ### March 28, 2026 - MVP Complete
 - [x] JWT + Google OAuth authentication

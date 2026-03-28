@@ -107,14 +107,14 @@ export default function SubmissionPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <ConnectClubLogo className="h-12" />
+          <ConnectClubLogo className="h-20" />
         </div>
       </header>
 
       {/* Form */}
       <main className="max-w-2xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-medium tracking-tight">Suggest a Platform</h1>
+          <h1 className="text-4xl font-medium tracking-tight">Suggest a Platform</h1>
           <p className="text-muted-foreground mt-1">
             Know a great gig or freelance platform? Let us know and we'll review it.
           </p>

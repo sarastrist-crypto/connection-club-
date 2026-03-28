@@ -55,7 +55,7 @@ export default function Layout({ children }) {
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
         <div className="ml-4">
-          <ConnectClubShield className="h-10" />
+          <ConnectClubShield className="h-14" />
         </div>
       </header>
 
@@ -65,7 +65,7 @@ export default function Layout({ children }) {
         data-testid="sidebar"
       >
         <div className="p-4 border-b border-border">
-          <ConnectClubLogo className="h-14" />
+          <ConnectClubLogo className="h-20" />
         </div>
 
         <nav className="p-4 flex flex-col h-[calc(100vh-88px)]">

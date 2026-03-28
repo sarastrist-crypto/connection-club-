@@ -137,7 +137,7 @@ export default function TaxCenterPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight">Tax Center</h1>
+            <h1 className="text-4xl font-medium tracking-tight">Tax Center</h1>
             <p className="text-muted-foreground mt-1">Track your 1099 income and deductions</p>
           </div>
           <div className="flex gap-2">

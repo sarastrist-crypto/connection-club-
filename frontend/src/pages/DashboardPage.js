@@ -57,8 +57,8 @@ export default function DashboardPage() {
       <div className="space-y-8" data-testid="dashboard">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-medium tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Your command center for opportunities and earnings</p>
+          <h1 className="text-4xl font-medium tracking-tight">Dashboard</h1>
+          <p className="text-base text-muted-foreground mt-1">Your command center for opportunities and earnings</p>
         </div>
 
         {/* Earnings Summary */}
@@ -113,7 +113,7 @@ export default function DashboardPage() {
           {/* Top Matches */}
           <div className="lg:col-span-2 dashboard-card" data-testid="top-matches-panel">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium">Top Matches</h2>
+              <h2 className="text-xl font-medium">Top Matches</h2>
               <Link to="/marketplace">
                 <Button variant="ghost" size="sm">
                   View All <ChevronRight className="w-4 h-4 ml-1" />
@@ -211,7 +211,7 @@ export default function DashboardPage() {
         {/* Activity Tracker */}
         <div className="dashboard-card" data-testid="activity-tracker">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Recent Activity</h2>
+            <h2 className="text-xl font-medium">Recent Activity</h2>
             <Link to="/introductions">
               <Button variant="ghost" size="sm">
                 View All <ChevronRight className="w-4 h-4 ml-1" />

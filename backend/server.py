@@ -248,6 +248,16 @@ class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
 
+class ConciergeRequest(BaseModel):
+    high_value_account_id: str
+    contact_name: str
+    company_name: str
+    estimated_locations: int
+    contact_email: Optional[str] = ""
+    contact_phone: Optional[str] = ""
+    notes: Optional[str] = ""
+    relationship: str
+
 # ===================== AUTH ROUTES =====================
 
 @api_router.post("/auth/register")
@@ -706,6 +716,57 @@ async def get_bundle(bundle_id: str):
         raise HTTPException(status_code=404, detail="Bundle not found")
     return bundle
 
+# ===================== HIGH-VALUE ACCOUNTS ROUTES =====================
+
+@api_router.get("/high-value-accounts")
+async def get_high_value_accounts():
+    accounts = await db.high_value_accounts.find({}, {"_id": 0}).to_list(100)
+    return {"accounts": accounts}
+
+@api_router.get("/high-value-accounts/{account_id}")
+async def get_high_value_account(account_id: str):
+    account = await db.high_value_accounts.find_one({"id": account_id}, {"_id": 0})
+    if not account:
+        raise HTTPException(status_code=404, detail="High-value account not found")
+    return account
+
+@api_router.post("/concierge-requests")
+async def create_concierge_request(data: ConciergeRequest, user: dict = Depends(get_current_user)):
+    user_id = user["_id"]
+    
+    # Get high-value account details
+    account = await db.high_value_accounts.find_one({"id": data.high_value_account_id})
+    if not account:
+        raise HTTPException(status_code=404, detail="High-value account not found")
+    
+    request_doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "high_value_account_id": data.high_value_account_id,
+        "account_name": account.get("name", ""),
+        "contact_name": data.contact_name,
+        "company_name": data.company_name,
+        "estimated_locations": data.estimated_locations,
+        "contact_email": data.contact_email,
+        "contact_phone": data.contact_phone,
+        "notes": data.notes,
+        "relationship": data.relationship,
+        "status": "pending",  # pending, assigned, in-progress, closed, earned
+        "estimated_value": account.get("contract_value_min", 0),
+        "potential_commission": account.get("commission_tiers", [{}])[0].get("commission", 0) if account.get("commission_tiers") else 0,
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
+    }
+    await db.concierge_requests.insert_one(request_doc)
+    
+    return {"id": request_doc["id"], "message": "Concierge request submitted. Our team will contact you within 24 hours."}
+
+@api_router.get("/concierge-requests")
+async def get_concierge_requests(user: dict = Depends(get_current_user)):
+    user_id = user["_id"]
+    requests = await db.concierge_requests.find({"user_id": user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return {"requests": requests}
+
 # ===================== INTRODUCTION ROUTES =====================
 
 @api_router.post("/introductions")
@@ -905,6 +966,78 @@ async def redeem_credits(amount: int, method: str, user: dict = Depends(get_curr
     )
     
     return {"message": "Redemption request submitted"}
+
+@api_router.get("/network/graph")
+async def get_network_graph(user: dict = Depends(get_current_user)):
+    """Get network graph data for visualization"""
+    user_id = user["_id"]
+    user_name = user.get("name", "You")
+    
+    # Get all invites sent by this user
+    invites = await db.invites.find({"inviter_id": user_id}).to_list(1000)
+    
+    # Get all users who were referred by this user
+    referred_users = []
+    for invite in invites:
+        referred = await db.users.find_one({"email": invite.get("invitee_email")})
+        if referred:
+            referred_users.append({
+                "id": str(referred["_id"]),
+                "name": referred.get("name", referred.get("email", "").split("@")[0]),
+                "email": referred.get("email", ""),
+                "onboarding_completed": referred.get("onboarding_completed", False),
+                "joined_at": invite.get("created_at")
+            })
+    
+    # Get all introductions made by this user
+    intros = await db.introductions.find({"user_id": user_id}, {"_id": 0}).to_list(1000)
+    
+    # Build nodes and edges for the graph
+    nodes = [
+        {"id": "center", "name": user_name, "type": "self", "size": 30}
+    ]
+    edges = []
+    
+    # Add referred members as nodes
+    for i, ref in enumerate(referred_users):
+        node_id = f"ref_{i}"
+        nodes.append({
+            "id": node_id,
+            "name": ref["name"],
+            "type": "referral",
+            "size": 20,
+            "status": "active" if ref["onboarding_completed"] else "pending"
+        })
+        edges.append({"source": "center", "target": node_id, "type": "referral"})
+    
+    # Add introductions as nodes
+    for i, intro in enumerate(intros):
+        node_id = f"intro_{i}"
+        nodes.append({
+            "id": node_id,
+            "name": intro.get("contact_name", "Contact"),
+            "type": "introduction",
+            "size": 15,
+            "status": intro.get("status", "introduced"),
+            "opportunity": intro.get("opportunity_name", ""),
+            "value": intro.get("commission_at_close", 0)
+        })
+        edges.append({"source": "center", "target": node_id, "type": "introduction"})
+    
+    # Calculate stats
+    stats = {
+        "total_referrals": len(referred_users),
+        "active_referrals": len([r for r in referred_users if r["onboarding_completed"]]),
+        "total_introductions": len(intros),
+        "earned_introductions": len([i for i in intros if i.get("status") == "earned"]),
+        "total_connections": len(nodes) - 1  # Exclude self
+    }
+    
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "stats": stats
+    }
 
 # ===================== COMMISSION TRACKER ROUTES =====================
 
@@ -1240,6 +1373,103 @@ async def seed_education_content(db_instance):
     await db_instance.education_content.insert_many(content)
     logging.info(f"Seeded {len(content)} education content items")
 
+async def seed_high_value_accounts(db_instance):
+    """Seed high-value account opportunities"""
+    existing = await db_instance.high_value_accounts.count_documents({})
+    if existing > 0:
+        return
+    
+    accounts = [
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Multi-Location Franchise",
+            "description": "Franchise owners with 5+ locations looking to centralize customer support and back-office operations.",
+            "target_profile": "QSR franchisees, hotel franchise groups, retail franchise operators",
+            "ideal_client": "Franchise owners managing multiple locations who need consistent customer experience across all sites without multiplying their admin staff.",
+            "services": ["Call Center", "Multi-location Support", "Centralized Booking", "Inventory Coordination", "Staff Scheduling Support"],
+            "contract_value_min": 25000,
+            "contract_value_max": 100000,
+            "commission_tiers": [
+                {"locations": "5-10", "commission": 2500, "residual": 500},
+                {"locations": "11-25", "commission": 5000, "residual": 1000},
+                {"locations": "26+", "commission": 10000, "residual": 2000}
+            ],
+            "tier": "high-value",
+            "concierge_required": True
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Property Management Company",
+            "description": "Property management firms handling 50+ units seeking tenant support and maintenance coordination.",
+            "target_profile": "Residential property managers, commercial property managers, HOA management companies",
+            "ideal_client": "Property managers drowning in tenant calls, maintenance requests, and lease inquiries. They need 24/7 support without hiring night staff.",
+            "services": ["Tenant Support Line", "Maintenance Dispatch", "Lease Inquiry Handling", "Emergency After-Hours", "Vendor Coordination"],
+            "contract_value_min": 15000,
+            "contract_value_max": 75000,
+            "commission_tiers": [
+                {"units": "50-100", "commission": 1500, "residual": 300},
+                {"units": "101-250", "commission": 3500, "residual": 700},
+                {"units": "251+", "commission": 7500, "residual": 1500}
+            ],
+            "tier": "high-value",
+            "concierge_required": True
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Regional Retailer",
+            "description": "Regional retail chains with multiple storefronts looking for unified customer service and e-commerce support.",
+            "target_profile": "Regional clothing chains, specialty retailers, home goods stores",
+            "ideal_client": "Retail operators who've grown beyond local presence but lack enterprise-level customer support infrastructure.",
+            "services": ["Omnichannel Support", "E-commerce Chat", "Store Locator Assistance", "Order Tracking", "Returns Processing Support"],
+            "contract_value_min": 20000,
+            "contract_value_max": 80000,
+            "commission_tiers": [
+                {"stores": "3-7", "commission": 2000, "residual": 400},
+                {"stores": "8-15", "commission": 4000, "residual": 800},
+                {"stores": "16+", "commission": 8000, "residual": 1600}
+            ],
+            "tier": "high-value",
+            "concierge_required": True
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Healthcare Practice Group",
+            "description": "Medical practice groups with multiple providers needing patient scheduling and administrative support.",
+            "target_profile": "Multi-physician practices, dental groups, specialty clinic networks",
+            "ideal_client": "Healthcare groups where phone volume overwhelms front desk staff, leading to missed appointments and frustrated patients.",
+            "services": ["Patient Scheduling", "Insurance Verification Support", "Appointment Reminders", "After-Hours Triage", "Medical Answering Service"],
+            "contract_value_min": 30000,
+            "contract_value_max": 120000,
+            "commission_tiers": [
+                {"providers": "5-10", "commission": 3000, "residual": 600},
+                {"providers": "11-20", "commission": 6000, "residual": 1200},
+                {"providers": "21+", "commission": 12000, "residual": 2400}
+            ],
+            "tier": "high-value",
+            "concierge_required": True
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Enterprise Service Company",
+            "description": "Large service companies (HVAC, plumbing, electrical) with regional coverage seeking dispatch and customer management.",
+            "target_profile": "Regional service contractors, multi-trade companies, home service franchises",
+            "ideal_client": "Service companies running 20+ trucks who can't keep up with inbound calls and need professional dispatch coordination.",
+            "services": ["Dispatch Center", "Emergency Response Line", "Scheduling Optimization", "Customer Follow-up", "Service Agreement Management"],
+            "contract_value_min": 35000,
+            "contract_value_max": 150000,
+            "commission_tiers": [
+                {"technicians": "10-25", "commission": 3500, "residual": 700},
+                {"technicians": "26-50", "commission": 7500, "residual": 1500},
+                {"technicians": "51+", "commission": 15000, "residual": 3000}
+            ],
+            "tier": "high-value",
+            "concierge_required": True
+        }
+    ]
+    
+    await db_instance.high_value_accounts.insert_many(accounts)
+    logging.info(f"Seeded {len(accounts)} high-value accounts")
+
 async def write_test_credentials():
     """Write test credentials to file"""
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@connectclub.com")
@@ -1306,6 +1536,7 @@ async def startup_event():
     await seed_platforms(db)
     await seed_bundles(db)
     await seed_education_content(db)
+    await seed_high_value_accounts(db)
     await write_test_credentials()
     
     logger.info("ConnectClub API started successfully")

@@ -63,7 +63,7 @@ export default function EducationPage() {
       <div className="space-y-6" data-testid="education-page">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-medium tracking-tight">Education Hub</h1>
+          <h1 className="text-4xl font-medium tracking-tight">Education Hub</h1>
           <p className="text-muted-foreground mt-1">Practical content to help you succeed</p>
         </div>
 
@@ -137,7 +137,7 @@ export default function EducationPage() {
 
         {/* Quick Tips */}
         <div className="dashboard-card bg-primary/5 border-primary/20">
-          <h2 className="text-lg font-medium mb-4">Quick Tips</h2>
+          <h2 className="text-xl font-medium mb-4">Quick Tips</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-card">
               <h3 className="font-medium mb-2">Making Warm Introductions</h3>

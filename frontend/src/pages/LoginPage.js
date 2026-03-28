@@ -43,12 +43,12 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">
-            <ConnectClubLogo className="h-16" />
+            <ConnectClubLogo className="h-24" />
           </div>
-          <h1 className="mt-8 text-center text-3xl font-medium tracking-tight text-foreground">
+          <h1 className="mt-8 text-center text-4xl font-medium tracking-tight text-foreground">
             Welcome back
           </h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
+          <p className="mt-2 text-center text-base text-muted-foreground">
             Sign in to access your opportunities
           </p>
         </div>
@@ -155,10 +155,10 @@ export default function LoginPage() {
       {/* Right side - Hero */}
       <div className="hidden lg:flex lg:flex-1 bg-primary items-center justify-center p-12">
         <div className="max-w-md text-primary-foreground">
-          <h2 className="text-4xl font-light tracking-tight">
+          <h2 className="text-5xl font-light tracking-tight">
             Your network should pay you.
           </h2>
-          <p className="mt-4 text-lg opacity-90">
+          <p className="mt-4 text-xl opacity-90">
             ConnectClub helps you turn relationships into income. Introduce businesses to solutions they need, and earn every time.
           </p>
         </div>

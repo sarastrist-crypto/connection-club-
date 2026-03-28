@@ -82,7 +82,7 @@ export default function NetworkPage() {
       <div className="space-y-6" data-testid="network-page">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-medium tracking-tight">My Network</h1>
+          <h1 className="text-4xl font-medium tracking-tight">My Network</h1>
           <p className="text-muted-foreground mt-1">Build your network, earn credits, get rewarded</p>
         </div>
 
@@ -126,7 +126,7 @@ export default function NetworkPage() {
 
         {/* Invite Section */}
         <div className="dashboard-card" data-testid="invite-section">
-          <h2 className="text-lg font-medium mb-4">Invite Your Network</h2>
+          <h2 className="text-xl font-medium mb-4">Invite Your Network</h2>
           <p className="text-sm text-muted-foreground mb-4">
             Earn credits when people you invite join and complete their profile. Share your unique link or send email invites.
           </p>
@@ -159,7 +159,7 @@ export default function NetworkPage() {
 
         {/* How to Earn */}
         <div className="dashboard-card">
-          <h2 className="text-lg font-medium mb-4">How to Earn Credits</h2>
+          <h2 className="text-xl font-medium mb-4">How to Earn Credits</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-muted/50">
               <div className="flex items-center gap-3 mb-2">
@@ -194,7 +194,7 @@ export default function NetworkPage() {
 
         {/* Activity Log */}
         <div className="dashboard-card" data-testid="activity-log">
-          <h2 className="text-lg font-medium mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-medium mb-4">Recent Activity</h2>
           {recentActivity.length === 0 ? (
             <div className="text-center py-8">
               <Users className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
@@ -217,7 +217,7 @@ export default function NetworkPage() {
 
         {/* Redemption Options */}
         <div className="dashboard-card">
-          <h2 className="text-lg font-medium mb-4">Redeem Credits</h2>
+          <h2 className="text-xl font-medium mb-4">Redeem Credits</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Button variant="outline" className="h-auto py-4 flex-col gap-2" disabled={credits?.credits_available < 100}>
               <DollarSign className="w-5 h-5" />

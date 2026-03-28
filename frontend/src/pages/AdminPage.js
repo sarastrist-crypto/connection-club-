@@ -88,7 +88,7 @@ export default function AdminPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-medium tracking-tight">Admin Panel</h1>
+            <h1 className="text-4xl font-medium tracking-tight">Admin Panel</h1>
             <p className="text-muted-foreground mt-1">Manage ConnectClub platform</p>
           </div>
           <Button variant="outline" onClick={fetchData}>
@@ -151,7 +151,7 @@ export default function AdminPage() {
           {/* Overview */}
           <TabsContent value="overview" className="space-y-6 mt-6">
             <div className="dashboard-card">
-              <h2 className="text-lg font-medium mb-4">Quick Actions</h2>
+              <h2 className="text-xl font-medium mb-4">Quick Actions</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <Button variant="outline" className="h-auto py-4 flex-col gap-2">
                   <Briefcase className="w-5 h-5" />
@@ -173,7 +173,7 @@ export default function AdminPage() {
             </div>
 
             <div className="dashboard-card">
-              <h2 className="text-lg font-medium mb-4">Recent Users</h2>
+              <h2 className="text-xl font-medium mb-4">Recent Users</h2>
               <div className="space-y-2">
                 {users.slice(0, 5).map((u, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
@@ -240,7 +240,7 @@ export default function AdminPage() {
           {/* Submissions */}
           <TabsContent value="submissions" className="mt-6">
             <div className="dashboard-card">
-              <h2 className="text-lg font-medium mb-4">Platform Submissions</h2>
+              <h2 className="text-xl font-medium mb-4">Platform Submissions</h2>
               {submissions.length === 0 ? (
                 <div className="text-center py-8">
                   <FileText className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />

@@ -143,9 +143,9 @@ export default function ResetPasswordPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <ConnectClubLogo className="h-16" />
+            <ConnectClubLogo className="h-24" />
           </div>
-          <h1 className="text-3xl font-medium tracking-tight mb-2">Reset your password</h1>
+          <h1 className="text-4xl font-medium tracking-tight mb-2">Reset your password</h1>
           <p className="text-muted-foreground">
             Enter a new password for <strong>{userEmail}</strong>
           </p>

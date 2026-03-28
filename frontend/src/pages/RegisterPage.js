@@ -49,10 +49,10 @@ export default function RegisterPage() {
       {/* Left side - Hero */}
       <div className="hidden lg:flex lg:flex-1 bg-primary items-center justify-center p-12">
         <div className="max-w-md text-primary-foreground">
-          <h2 className="text-4xl font-light tracking-tight">
+          <h2 className="text-5xl font-light tracking-tight">
             Turn introductions into income.
           </h2>
-          <p className="mt-4 text-lg opacity-90">
+          <p className="mt-4 text-xl opacity-90">
             Join thousands of members earning commissions by connecting businesses with the support they need.
           </p>
           <div className="mt-8 space-y-4">
@@ -82,12 +82,12 @@ export default function RegisterPage() {
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">
-            <ConnectClubLogo className="h-16" />
+            <ConnectClubLogo className="h-24" />
           </div>
-          <h1 className="mt-8 text-center text-3xl font-medium tracking-tight text-foreground">
+          <h1 className="mt-8 text-center text-4xl font-medium tracking-tight text-foreground">
             Create your account
           </h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
+          <p className="mt-2 text-center text-base text-muted-foreground">
             Start earning from your network today
           </p>
         </div>

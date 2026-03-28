@@ -136,7 +136,7 @@ export default function IntroductionFlowPage() {
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
             <ChevronLeft className="w-4 h-4 mr-2" /> Back
           </Button>
-          <h1 className="text-3xl font-medium tracking-tight">Start an Introduction</h1>
+          <h1 className="text-4xl font-medium tracking-tight">Start an Introduction</h1>
           <p className="text-muted-foreground mt-1">Walk through making a warm introduction</p>
         </div>
 

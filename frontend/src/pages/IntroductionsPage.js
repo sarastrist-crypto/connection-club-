@@ -84,7 +84,7 @@ export default function IntroductionsPage() {
       <div className="space-y-6" data-testid="introductions-page">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-medium tracking-tight">Introductions</h1>
+          <h1 className="text-4xl font-medium tracking-tight">Introductions</h1>
           <p className="text-muted-foreground mt-1">Track your introduction pipeline</p>
         </div>
 
