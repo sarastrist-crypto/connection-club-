@@ -185,6 +185,20 @@
   .commission-pulse {
     animation: amber-pulse 2s ease-in-out infinite;
   }
+
+  /* CTA pulse for revenue banner */
+  @keyframes cta-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+    }
+  }
+
+  .cta-pulse {
+    animation: cta-glow 5s ease-in-out infinite;
+  }
   
   /* Staggered entrance animations */
   .stagger-enter > * {

@@ -22,6 +22,8 @@ import EducationPage from './pages/EducationPage';
 import AdminPage from './pages/AdminPage';
 import SubmissionPage from './pages/SubmissionPage';
 
+import ConciergePage from './pages/ConciergePage';
+
 import './App.css';
 
 function AppRouter() {
@@ -56,6 +58,11 @@ function AppRouter() {
       <Route path="/marketplace" element={
         <ProtectedRoute>
           <MarketplacePage />
+        </ProtectedRoute>
+      } />
+      <Route path="/concierge/:accountId" element={
+        <ProtectedRoute>
+          <ConciergePage />
         </ProtectedRoute>
       } />
       <Route path="/introductions/new" element={

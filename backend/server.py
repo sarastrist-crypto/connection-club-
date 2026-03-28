@@ -258,6 +258,10 @@ class ConciergeRequest(BaseModel):
     notes: Optional[str] = ""
     relationship: str
 
+class PromotionClickTrack(BaseModel):
+    promotion_id: str
+    promotion_name: str
+
 # ===================== AUTH ROUTES =====================
 
 @api_router.post("/auth/register")
@@ -766,6 +770,94 @@ async def get_concierge_requests(user: dict = Depends(get_current_user)):
     user_id = user["_id"]
     requests = await db.concierge_requests.find({"user_id": user_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return {"requests": requests}
+
+# ===================== PROMOTIONS / REVENUE BANNER ROUTES =====================
+
+PROMOTIONS = [
+    {
+        "id": "connectclub-va",
+        "name": "ConnectClub Virtual Assistants",
+        "headline": "Scale your ConnectClub Network without the Burnout.",
+        "subtext": "Dedicated Virtual Assistants starting at $399/mo. 24/7 coverage for your business.",
+        "cta_label": "Claim My VA Trial",
+        "cta_url": "/marketplace",
+        "target_industries": ["hospitality", "food-beverage", "construction", "real-estate"],
+        "target_tracks": ["hospitality", "career-professional"],
+        "commission_close": "$50 - $100",
+        "commission_residual": "$60/month per active agent",
+        "commission_percent": "15% Residual on Monthly Billing",
+        "priority": 1
+    },
+    {
+        "id": "menio-global",
+        "name": "Menio Global Credit Processing",
+        "headline": "Stop the Profit Leak. Reduce Processing Fees by 30%.",
+        "subtext": "Special ConnectClub Merchant Rates. Zero setup fees for Menio Global partners.",
+        "cta_label": "Audit My Rates",
+        "cta_url": "#menio-global",
+        "target_industries": ["e-commerce", "retail", "food-beverage", "hospitality"],
+        "target_tracks": ["career-professional", "young-professional"],
+        "commission_close": "$150 - $300",
+        "commission_residual": "$100 - $1,000+/mo",
+        "commission_percent": "25% of Net Residual Profit",
+        "priority": 2
+    },
+    {
+        "id": "imago-imaging",
+        "name": "Imago Imaging",
+        "headline": "Diagnostic AI for the Modern Practice.",
+        "subtext": "Enhance your Imago Imaging workflow. High-definition AI overlays for superior patient care.",
+        "cta_label": "Upgrade My Imaging",
+        "cta_url": "#imago-imaging",
+        "target_industries": ["healthcare", "education"],
+        "target_tracks": ["career-professional"],
+        "commission_close": "$1,000 - $2,500",
+        "commission_residual": "$5 - $10/scan",
+        "commission_percent": "10% Enterprise License Fee",
+        "priority": 3
+    }
+]
+
+@api_router.get("/promotions/targeted")
+async def get_targeted_promotions(user: dict = Depends(get_current_user)):
+    """Return promotions ordered by relevance to user's profile"""
+    user_industries = user.get("industries", [])
+    user_track = user.get("career_track", "")
+    user_id = user["_id"]
+
+    scored = []
+    for promo in PROMOTIONS:
+        score = 0
+        industry_overlap = set(user_industries) & set(promo["target_industries"])
+        score += len(industry_overlap) * 10
+        if user_track in promo["target_tracks"]:
+            score += 15
+        scored.append({**promo, "relevance_score": score})
+
+    scored.sort(key=lambda p: (-p["relevance_score"], p["priority"]))
+
+    for p in scored:
+        if p["cta_url"].startswith("http") or p["cta_url"].startswith("#") or p["cta_url"].startswith("/"):
+            ref_sep = "&" if "?" in p["cta_url"] else "?"
+            if not p["cta_url"].startswith("/"):
+                p["cta_url"] = f"{p['cta_url']}{ref_sep}ref=ConnectClub_{user_id}"
+
+    return {"promotions": scored}
+
+@api_router.post("/promotions/track-click")
+async def track_promotion_click(data: PromotionClickTrack, user: dict = Depends(get_current_user)):
+    """Log a promotion click for commission tracking"""
+    click_doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["_id"],
+        "user_email": user.get("email", ""),
+        "promotion_id": data.promotion_id,
+        "promotion_name": data.promotion_name,
+        "ref_code": f"ConnectClub_{user['_id']}",
+        "clicked_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.promotion_clicks.insert_one(click_doc)
+    return {"tracked": True, "ref_code": click_doc["ref_code"]}
 
 # ===================== INTRODUCTION ROUTES =====================
 
@@ -1530,6 +1622,7 @@ async def startup_event():
     await db.network_credits.create_index("user_id")
     await db.password_reset_tokens.create_index("token")
     await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
+    await db.promotion_clicks.create_index("user_id")
     
     # Seed data
     await seed_admin(db)

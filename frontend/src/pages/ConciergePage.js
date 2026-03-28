@@ -133,7 +133,7 @@ export default function ConciergePage() {
               <Crown className="w-3 h-3 mr-1" /> High-Value
             </span>
           </div>
-          <h1 className="text-3xl font-medium tracking-tight">{account?.name}</h1>
+          <h1 className="text-4xl font-medium tracking-tight">{account?.name}</h1>
           <p className="text-muted-foreground mt-1">Request concierge support for this opportunity</p>
         </div>
 

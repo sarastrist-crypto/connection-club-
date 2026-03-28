@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../components/Layout';
+import RevenueBanner from '../components/RevenueBanner';
 import { Button } from '../components/ui/button';
 import { Progress } from '../components/ui/progress';
 import { Skeleton } from '../components/ui/skeleton';
@@ -55,6 +56,9 @@ export default function DashboardPage() {
   return (
     <Layout>
       <div className="space-y-8" data-testid="dashboard">
+        {/* Revenue Banner */}
+        <RevenueBanner />
+
         {/* Header */}
         <div>
           <h1 className="text-4xl font-medium tracking-tight">Dashboard</h1>
