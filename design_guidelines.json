@@ -1,0 +1,130 @@
+{
+  "theme": "light",
+  "archetype": "1 (Organic & Earthy)",
+  "colors": {
+    "background": "#F9F9F6",
+    "foreground": "#1A362D",
+    "card": "#FFFFFF",
+    "card_foreground": "#1A362D",
+    "popover": "#FFFFFF",
+    "popover_foreground": "#1A362D",
+    "primary": "#1A362D",
+    "primary_foreground": "#F9F9F6",
+    "secondary": "#E8E3D9",
+    "secondary_foreground": "#1A362D",
+    "muted": "#E5E2DA",
+    "muted_foreground": "#5C6B64",
+    "accent": "#C85A3C",
+    "accent_foreground": "#FFFFFF",
+    "destructive": "#8A2E2E",
+    "destructive_foreground": "#FFFFFF",
+    "border": "#D8D4CC",
+    "input": "#D8D4CC",
+    "ring": "#1A362D",
+    "radius": "0.5rem",
+    "brand_specific": {
+      "sage": "#7A8B82",
+      "clay": "#B57A60",
+      "ochre": "#D69F4C"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Outfit, sans-serif",
+      "body": "IBM Plex Sans, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-light",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-medium",
+      "h3": "text-xl sm:text-2xl tracking-tight font-medium",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-muted-foreground",
+      "overline": "text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+    },
+    "rules": [
+      "Headings must use tight letter spacing",
+      "Never use Inter for headings",
+      "Overlines must be uppercase, tiny, and wide spacing",
+      "Use varied weights to break standard Regular/Bold binary"
+    ]
+  },
+  "layout": {
+    "spacing_scale": "Tailwind standard (p-1 to p-64)",
+    "generous_spacing": "Use p-8 or p-12 for container padding instead of p-4",
+    "grid_modes": {
+      "dashboard": {
+        "name": "The Control Room Grid",
+        "base_grid": "grid-cols-1 md:grid-cols-3 lg:grid-cols-4",
+        "gap": "gap-4 md:gap-6",
+        "rules": [
+          "Every pixel utilized",
+          "h-full on children for vertical alignment",
+          "Summary: col-span-1",
+          "Primary Data: col-span-2 row-span-2 or col-span-3",
+          "Feed/List: col-span-1 row-span-2"
+        ]
+      },
+      "marketing": {
+        "name": "The Tetris Grid",
+        "base_grid": "grid-cols-1 md:grid-cols-8 lg:grid-cols-12",
+        "gap": "gap-8 lg:gap-12",
+        "rules": [
+          "Asymmetry and visual tension",
+          "Never fill 100% perfectly, leave negative space"
+        ]
+      }
+    },
+    "surfaces": {
+      "dashboard_cards": "Flat solid background, 1px subtle border, no shadow by default. Hover: slight lift and shadow-sm.",
+      "headers": "Solid background with hard bottom border or Crystal Glass (bg-white/70 backdrop-blur-xl border-b border-white/40).",
+      "modals": "Flat solid background, dark overlay (bg-black/30 backdrop-blur-sm)."
+    }
+  },
+  "components": {
+    "button": "Solid colors, crisp edges. Avoid excessive border-radius. Use hover:bg-primary/90.",
+    "input": "Subtle borders, bg-transparent or bg-white. Focus ring must be distinct (ring-2 ring-primary ring-offset-2).",
+    "card": "Use div with border-border instead of Shadcn Card for more layout freedom where needed. Inside Dashboard, use pure flat cards.",
+    "tables": "Sortable headers, left-aligned data, right-aligned numbers. Use Shadcn Table.",
+    "charts": "Recharts with earthy color palette (Forest Green, Sage, Ochre, Terracotta). Accessible tooltips.",
+    "icons": "lucide-react",
+    "navigation": "Sidebar for Dashboard (collapsible on mobile). Top header for marketing/onboarding."
+  },
+  "media": {
+    "image_urls": {
+      "logo": {
+        "url": "https://static.prod-images.emergentagent.com/jobs/55e5192a-5621-4870-b0fb-67b6a7896070/images/bc25463b76696a92f7729053d65f4d88b5b22909c4986c5d19128dd1e1327b75.png",
+        "description": "Clean minimal geometric logo design for ConnectClub in deep forest green and warm sand",
+        "category": "branding"
+      },
+      "tax_hero": {
+        "url": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1024",
+        "description": "Abstract financial calculator or papers, warm tones",
+        "category": "background"
+      },
+      "network_bg": {
+        "url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1024",
+        "description": "Diverse professionals collaborating",
+        "category": "background"
+      }
+    }
+  },
+  "motion": {
+    "hover_states": "All interactive elements must have visible hover states. Buttons: bg shift. Cards: slight translate-y.",
+    "page_transitions": "Subtle fade-in and slide-up (framer-motion).",
+    "loading": "Use skeletal loaders for dashboard widgets instead of spinners."
+  },
+  "instructions_to_main_agent": [
+    "Use Archetype 1 (Organic & Earthy). The primary color is deep forest green (#1A362D).",
+    "DO NOT use Inter or standard fonts for headings. Use Outfit for headings and IBM Plex Sans for body text.",
+    "Dashboard should follow 'Control Room' grid protocol. Dense, flat cards with 1px border. No heavy drop shadows.",
+    "Implement the 5-step onboarding with a clean, centered layout and progress indicators.",
+    "For the Tax Center, use clear, high-contrast typography for numbers and Recharts for quarterly visualisations.",
+    "Use placeholder commission values like '$50 at close, $10/month residual' inside the Commission Tracker.",
+    "All interactive elements MUST include data-testid attributes for testing (e.g., data-testid='login-button').",
+    "Add 'lucide-react' for icons and use 'recharts' for data viz.",
+    "Ensure the ConnectClub logo is prominently placed in the sidebar and auth screens.",
+    "Provide a smooth responsive experience: Sidebar hidden behind hamburger on mobile, visible on desktop."
+  ]
+}
