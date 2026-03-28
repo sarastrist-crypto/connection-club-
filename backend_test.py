@@ -290,6 +290,82 @@ class ConnectClubAPITester:
         except Exception as e:
             return self.log_test("User Submission Endpoint", False, str(e))
 
+    def test_forgot_password_flow(self):
+        """Test forgot password functionality"""
+        try:
+            # Test forgot password request
+            forgot_data = {"email": "admin@connectclub.com"}
+            response = self.session.post(f"{self.base_url}/api/auth/forgot-password", json=forgot_data)
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = "message" in data and "reset link" in data["message"]
+            return self.log_test("Forgot Password Request", success, 
+                               f"Status: {response.status_code}")
+        except Exception as e:
+            return self.log_test("Forgot Password Request", False, str(e))
+
+    def test_verify_reset_token_invalid(self):
+        """Test verify reset token with invalid token"""
+        try:
+            response = self.session.get(f"{self.base_url}/api/auth/verify-reset-token?token=invalid_token")
+            success = response.status_code == 400  # Should return 400 for invalid token
+            return self.log_test("Verify Reset Token (Invalid)", success, 
+                               f"Status: {response.status_code}")
+        except Exception as e:
+            return self.log_test("Verify Reset Token (Invalid)", False, str(e))
+
+    def test_introduction_creation(self):
+        """Test introduction creation"""
+        try:
+            # Need to be logged in as a user
+            if not self.test_user_id:
+                return self.log_test("Introduction Creation", False, "No test user available")
+            
+            intro_data = {
+                "opportunity_id": "test-bundle-id",
+                "opportunity_type": "bundle",
+                "contact_name": "John Smith",
+                "business_type": "HVAC contractor",
+                "relationship": "working",
+                "approach_method": "text",
+                "message": "Hey John, I've been working with a group that helps businesses like yours handle phone support without adding headcount. Thought of you. Want me to connect you?"
+            }
+            
+            response = self.session.post(f"{self.base_url}/api/introductions", json=intro_data)
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = "id" in data and "message" in data
+            return self.log_test("Introduction Creation", success, 
+                               f"Status: {response.status_code}")
+        except Exception as e:
+            return self.log_test("Introduction Creation", False, str(e))
+
+    def test_tax_entry_creation(self):
+        """Test tax entry creation"""
+        try:
+            # Need to be logged in as a user
+            if not self.test_user_id:
+                return self.log_test("Tax Entry Creation", False, "No test user available")
+            
+            tax_data = {
+                "amount": 500.00,
+                "description": "Freelance income",
+                "date": "2024-01-15",
+                "category": "income"
+            }
+            
+            response = self.session.post(f"{self.base_url}/api/tax/entry", json=tax_data)
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = "id" in data and "message" in data
+            return self.log_test("Tax Entry Creation", success, 
+                               f"Status: {response.status_code}")
+        except Exception as e:
+            return self.log_test("Tax Entry Creation", False, str(e))
+
     def run_all_tests(self):
         """Run all API tests"""
         print("🚀 Starting ConnectClub API Tests")
@@ -319,6 +395,14 @@ class ConnectClubAPITester:
         
         # Public endpoints
         self.test_user_submission_endpoint()
+        
+        # Password reset functionality
+        self.test_forgot_password_flow()
+        self.test_verify_reset_token_invalid()
+        
+        # Additional functionality tests
+        self.test_introduction_creation()
+        self.test_tax_entry_creation()
         
         # Summary
         print("=" * 50)

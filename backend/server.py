@@ -241,6 +241,13 @@ class UserSubmission(BaseModel):
     submitter_name: Optional[str] = ""
     submitter_email: Optional[str] = ""
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
 # ===================== AUTH ROUTES =====================
 
 @api_router.post("/auth/register")
@@ -446,6 +453,100 @@ async def handle_google_session(request: Request, response: Response):
         "role": user.get("role", "member"),
         "onboarding_completed": user.get("onboarding_completed", False)
     }
+
+# Password reset endpoints
+@api_router.post("/auth/forgot-password")
+async def forgot_password(data: ForgotPasswordRequest):
+    email = data.email.lower()
+    user = await db.users.find_one({"email": email})
+    
+    # Always return success to prevent email enumeration
+    if not user:
+        return {"message": "If an account exists with that email, a reset link has been sent."}
+    
+    # Check if user is Google OAuth user (no password)
+    if user.get("auth_provider") == "google":
+        return {"message": "This account uses Google sign-in. Please use the Google login button."}
+    
+    # Generate reset token
+    reset_token = secrets.token_urlsafe(32)
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+    
+    # Store token
+    await db.password_reset_tokens.insert_one({
+        "token": reset_token,
+        "user_id": str(user["_id"]),
+        "email": email,
+        "expires_at": expires_at,
+        "used": False,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # In production, send email here
+    # For now, log the reset link
+    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+    reset_link = f"{frontend_url}/reset-password?token={reset_token}"
+    logging.info(f"Password reset link for {email}: {reset_link}")
+    
+    return {"message": "If an account exists with that email, a reset link has been sent."}
+
+@api_router.post("/auth/reset-password")
+async def reset_password(data: ResetPasswordRequest):
+    # Find the token
+    token_doc = await db.password_reset_tokens.find_one({
+        "token": data.token,
+        "used": False
+    })
+    
+    if not token_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    # Check expiration - handle timezone properly
+    expires_at = token_doc["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if datetime.now(timezone.utc) > expires_at:
+        raise HTTPException(status_code=400, detail="Reset token has expired")
+    
+    # Validate password
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    # Update user password
+    new_hash = hash_password(data.new_password)
+    await db.users.update_one(
+        {"_id": ObjectId(token_doc["user_id"])},
+        {"$set": {"password_hash": new_hash}}
+    )
+    
+    # Mark token as used
+    await db.password_reset_tokens.update_one(
+        {"token": data.token},
+        {"$set": {"used": True, "used_at": datetime.now(timezone.utc)}}
+    )
+    
+    return {"message": "Password has been reset successfully"}
+
+@api_router.get("/auth/verify-reset-token")
+async def verify_reset_token(token: str):
+    token_doc = await db.password_reset_tokens.find_one({
+        "token": token,
+        "used": False
+    })
+    
+    if not token_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    # Handle timezone comparison properly
+    expires_at = token_doc["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if datetime.now(timezone.utc) > expires_at:
+        raise HTTPException(status_code=400, detail="Reset token has expired")
+    
+    return {"valid": True, "email": token_doc["email"]}
 
 # ===================== ONBOARDING ROUTES =====================
 
@@ -1197,6 +1298,8 @@ async def startup_event():
     await db.introductions.create_index("user_id")
     await db.tax_entries.create_index("user_id")
     await db.network_credits.create_index("user_id")
+    await db.password_reset_tokens.create_index("token")
+    await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
     
     # Seed data
     await seed_admin(db)
