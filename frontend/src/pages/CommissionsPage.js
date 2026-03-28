@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import { Skeleton } from '../components/ui/skeleton';
-import { Progress } from '../components/ui/progress';
 import {
   DollarSign, TrendingUp, Clock, Award,
-  Zap, Target, Calendar
+  Zap, Calendar, CreditCard, Microscope,
+  CheckCircle2, ArrowRight, Users, Building2
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -45,21 +45,19 @@ export default function CommissionsPage() {
 
   const earned = data?.introductions?.filter(i => i.status === 'earned') || [];
   const pending = data?.introductions?.filter(i => i.status !== 'earned') || [];
-
-  // Calculate monthly projection
   const monthlyProjection = data?.active_residual || 0;
   const yearlyProjection = monthlyProjection * 12;
 
   return (
     <Layout>
-      <div className="space-y-6" data-testid="commissions-page">
+      <div className="space-y-8" data-testid="commissions-page">
         {/* Header */}
         <div>
           <h1 className="text-4xl font-medium tracking-tight">Commission Tracker</h1>
-          <p className="text-muted-foreground mt-1">Track your earnings and residual income</p>
+          <p className="text-muted-foreground mt-1">Track your earnings and explore commissionable services</p>
         </div>
 
-        {/* Main Stats */}
+        {/* My Earnings Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="dashboard-card" data-testid="total-earned">
             <div className="flex items-center gap-3 mb-3">
@@ -95,37 +93,189 @@ export default function CommissionsPage() {
           </div>
         </div>
 
-        {/* Progress to Goals */}
-        <div className="dashboard-card">
-          <h2 className="text-xl font-medium mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5" /> Income Goals
-          </h2>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span>$1,000/month floor</span>
-                <span className="text-muted-foreground">{Math.min(100, Math.round((monthlyProjection / 1000) * 100))}%</span>
-              </div>
-              <Progress value={Math.min(100, (monthlyProjection / 1000) * 100)} className="h-2" />
+        {/* ═══════ COMMISSIONABLE SERVICES ═══════ */}
+        <div>
+          <h2 className="text-xl font-medium mb-1">Commissionable Services</h2>
+          <p className="text-sm text-muted-foreground mb-5">Detailed breakdown of partner programs you can earn from</p>
+        </div>
+
+        {/* MENIO GLOBAL — Credit Card Processing */}
+        <div className="dashboard-card border-2 border-blue-200 overflow-hidden" data-testid="menio-global-card">
+          <div className="flex items-start gap-4 mb-5">
+            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
+              <CreditCard className="w-6 h-6 text-white" />
             </div>
             <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span>$3,000/month floor</span>
-                <span className="text-muted-foreground">{Math.min(100, Math.round((monthlyProjection / 3000) * 100))}%</span>
-              </div>
-              <Progress value={Math.min(100, (monthlyProjection / 3000) * 100)} className="h-2" />
+              <h3 className="text-xl font-semibold">Menio Global Credit Processing</h3>
+              <p className="text-sm text-muted-foreground mt-0.5">Merchant payment processing with ConnectClub-exclusive rates</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Commission Model</p>
+              <p className="text-2xl font-bold text-blue-900">25%</p>
+              <p className="text-sm text-blue-700">of Net Residual Profit</p>
+            </div>
+            <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Closing Payout</p>
+              <p className="text-2xl font-bold text-blue-900">$150 - $300</p>
+              <p className="text-sm text-blue-700">Upfront equipment commission</p>
+            </div>
+            <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-1">Monthly Residual</p>
+              <p className="text-2xl font-bold text-emerald-700">$100 - $1,000+</p>
+              <p className="text-sm text-blue-700">Based on merchant volume</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-blue-600" /> Service Details
+              </h4>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <span>Reduce merchant processing fees by up to 30% vs. current provider</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <span>Zero setup fees for ConnectClub partner merchants</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <span>POS terminal, mobile reader, and virtual terminal solutions</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <span>Next-day funding for qualifying businesses</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <span>Chargeback protection and PCI compliance included</span>
+                </li>
+              </ul>
             </div>
             <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span>$10,000/month floor</span>
-                <span className="text-muted-foreground">{Math.min(100, Math.round((monthlyProjection / 10000) * 100))}%</span>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-600" /> Ideal Client
+              </h4>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <span>Restaurants, cafes, and food service businesses</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <span>Retail stores and e-commerce merchants</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <span>Professional services (salons, spas, gyms)</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <span>Any business processing $5K+/month in card transactions</span>
+                </li>
+              </ul>
+              <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <p className="text-xs font-semibold text-amber-800">Conversation Starter</p>
+                <p className="text-sm text-amber-900 mt-1 italic">"When was the last time you compared your credit card processing rates? Most merchants are overpaying by 20-30% and don't even know it."</p>
               </div>
-              <Progress value={Math.min(100, (monthlyProjection / 10000) * 100)} className="h-2" />
             </div>
           </div>
         </div>
 
-        {/* Pipeline */}
+        {/* IMAGO IMAGING */}
+        <div className="dashboard-card border-2 border-violet-200 overflow-hidden" data-testid="imago-imaging-card">
+          <div className="flex items-start gap-4 mb-5">
+            <div className="w-12 h-12 rounded-xl bg-violet-600 flex items-center justify-center flex-shrink-0">
+              <Microscope className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Imago Imaging</h3>
+              <p className="text-sm text-muted-foreground mt-0.5">Diagnostic AI software for medical and dental practices</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div className="p-4 rounded-lg bg-violet-50 border border-violet-100">
+              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Commission Model</p>
+              <p className="text-2xl font-bold text-violet-900">10%</p>
+              <p className="text-sm text-violet-700">Enterprise License Fee</p>
+            </div>
+            <div className="p-4 rounded-lg bg-violet-50 border border-violet-100">
+              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Closing Payout</p>
+              <p className="text-2xl font-bold text-violet-900">$1,000 - $2,500</p>
+              <p className="text-sm text-violet-700">High-ticket software sale</p>
+            </div>
+            <div className="p-4 rounded-lg bg-violet-50 border border-violet-100">
+              <p className="text-xs text-violet-600 font-semibold uppercase tracking-wider mb-1">Per-Scan Residual</p>
+              <p className="text-2xl font-bold text-emerald-700">$5 - $10</p>
+              <p className="text-sm text-violet-700">Per "Scan-as-a-Service" transaction</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Microscope className="w-4 h-4 text-violet-600" /> Service Details
+              </h4>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <span>AI-powered diagnostic overlays for X-rays, CT, and MRI imaging</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <span>High-definition image enhancement for superior diagnostic accuracy</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <span>HIPAA-compliant cloud platform with secure data handling</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <span>Integrates with existing PACS systems and EHR workflows</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+                  <span>Scan-as-a-Service model: no large upfront hardware investment</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Users className="w-4 h-4 text-violet-600" /> Ideal Client
+              </h4>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Multi-physician practices and medical groups</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Dental offices and orthodontic practices</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Specialty clinics (orthopedics, radiology, dermatology)</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <ArrowRight className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span>Veterinary clinics with imaging equipment</span>
+                </li>
+              </ul>
+              <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <p className="text-xs font-semibold text-amber-800">Conversation Starter</p>
+                <p className="text-sm text-amber-900 mt-1 italic">"How confident are your providers in their diagnostic reads? Imago's AI overlay catches findings that human eyes can miss — and it pays for itself in malpractice risk reduction alone."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════ PIPELINE TRACKER ═══════ */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Earned */}
           <div className="dashboard-card" data-testid="earned-list">
@@ -136,6 +286,7 @@ export default function CommissionsPage() {
               <div className="text-center py-8">
                 <Zap className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
                 <p className="text-muted-foreground">No commissions earned yet</p>
+                <p className="text-sm text-muted-foreground mt-1">Start introducing businesses to Menio Global or Imago to earn.</p>
               </div>
             ) : (
               <div className="space-y-3">
