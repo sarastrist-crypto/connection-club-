@@ -6,8 +6,9 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 ## Architecture
 - **Frontend**: React with Tailwind CSS, Shadcn UI components
 - **Backend**: FastAPI with MongoDB (Motor async driver)
-- **Authentication**: JWT-based auth + Emergent Google OAuth
-- **Design System**: Organic & Earthy theme with forest green primary (#1A362D)
+- **Authentication**: JWT-based auth + Emergent Google OAuth + Password Reset
+- **Design System**: Forest green primary (#0F3D22), Gold accents (#D4A017)
+- **Logo**: Custom shield with dollar sign and "ConnectClub" wordmark
 
 ## User Personas
 1. **Hospitality Professional**: Experience in restaurants, hotels, events
@@ -27,23 +28,26 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 9. Admin Panel
 10. User Submission Form
 
-## What's Been Implemented (March 28, 2026)
-### MVP Complete
+## What's Been Implemented
+
+### March 28, 2026 - MVP Complete
 - [x] JWT + Google OAuth authentication
+- [x] Password reset flow (forgot password + reset with token)
 - [x] 5-step onboarding with match reveal
 - [x] Dashboard with earnings summary, top matches, activity tracker
 - [x] Opportunity Marketplace with 14 gig platforms, 7 HLS bundles
-- [x] Introduction Flow with editable message templates
+- [x] Introduction Flow (4-step) with editable message templates
 - [x] Tax Center with income/deduction tracking, quarterly estimates
 - [x] Network Credits dashboard with referral system
 - [x] Commission Tracker with pipeline visualization
 - [x] Education Hub with contextual content
 - [x] Admin Panel with user/submission management
 - [x] User Submission Form for platform suggestions
+- [x] Custom ConnectClub logo (shield with dollar sign)
 
 ### Database Seeding
 - 14 gig platforms across Hospitality, Entry-Level, Career Professional tracks
-- 7 HLS Meal Kit bundles (The Always-Open, Digital Storefront, Practice Builder, Launch Pad, Back Office, Visibility Engine, Client Experience)
+- 7 HLS Meal Kit bundles
 - 5 education content items
 - Admin user pre-created
 
@@ -54,23 +58,22 @@ Build ConnectClub — a professional opportunity platform that operates at the i
 
 ### P1 (High Priority)
 - High-Value Accounts tier (Tier 3) - dedicated concierge flow
+- Email integration for password reset (currently logged only)
 - Email notifications for introduction status changes
-- Real invitation emails (currently logged only)
 
 ### P2 (Medium Priority)
 - Network map visualization (node graph)
 - Leaderboard for top earners
-- Password reset flow
 - Profile editing
+- Bulk CSV import for admin
 
 ### P3 (Nice to Have)
 - Dark mode
 - Mobile app
 - Advanced analytics dashboard
-- Bulk CSV import for admin
 
 ## Next Action Items
-1. Add High-Value Accounts tier with concierge support
-2. Implement email notifications via SendGrid
-3. Add network visualization with D3.js or similar
-4. Add forgot password/reset flow
+1. Integrate email service (SendGrid/Resend) for password reset and notifications
+2. Add High-Value Accounts tier with concierge support
+3. Add network visualization with D3.js
+4. Implement profile editing
