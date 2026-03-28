@@ -5,9 +5,9 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Checkbox } from '../components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { Progress } from '../components/ui/progress';
+import ConnectClubLogo from '../components/ConnectClubLogo';
 import { 
   ChevronRight, ChevronLeft, Check, Loader2,
   MapPin, Phone, Mail, MessageSquare,
@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
-const LOGO_URL = "https://static.prod-images.emergentagent.com/jobs/55e5192a-5621-4870-b0fb-67b6a7896070/images/bc25463b76696a92f7729053d65f4d88b5b22909c4986c5d19128dd1e1327b75.png";
 
 const INDUSTRIES = [
   { id: 'healthcare', label: 'Healthcare', icon: '🏥' },
@@ -157,7 +156,9 @@ export default function OnboardingPage() {
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-8">
-            <img src={LOGO_URL} alt="ConnectClub" className="h-10 mx-auto mb-6" />
+            <div className="flex justify-center mb-6">
+              <ConnectClubLogo className="h-16" />
+            </div>
             <h1 className="text-3xl font-medium tracking-tight mb-2">Here's where you start</h1>
             <p className="text-muted-foreground">Based on your network, these opportunities are your best match</p>
           </div>
@@ -225,8 +226,8 @@ export default function OnboardingPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-card border-b border-border z-50">
-        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
-          <img src={LOGO_URL} alt="ConnectClub" className="h-8" />
+        <div className="max-w-2xl mx-auto px-6 py-3 flex items-center justify-between">
+          <ConnectClubLogo className="h-12" />
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">Step {step} of 5</span>
             <Progress value={(step / 5) * 100} className="w-24 h-2" />
@@ -234,8 +235,8 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      {/* Content */}
-      <main className="pt-24 pb-24 px-6">
+      {/* Content - with extra bottom padding for fixed footer */}
+      <main className="pt-28 pb-32 px-6">
         <div className="max-w-2xl mx-auto">
           {/* Step 1: Basic Info */}
           {step === 1 && (

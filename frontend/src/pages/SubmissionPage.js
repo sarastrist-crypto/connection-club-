@@ -7,13 +7,13 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Checkbox } from '../components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import ConnectClubLogo from '../components/ConnectClubLogo';
 import {
   ArrowLeft, Send, Loader2, Check
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
-const LOGO_URL = "https://static.prod-images.emergentagent.com/jobs/55e5192a-5621-4870-b0fb-67b6a7896070/images/bc25463b76696a92f7729053d65f4d88b5b22909c4986c5d19128dd1e1327b75.png";
 
 const TRACKS = [
   { id: 'hospitality', label: 'Hospitality' },
@@ -107,7 +107,7 @@ export default function SubmissionPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <img src={LOGO_URL} alt="ConnectClub" className="h-8" />
+          <ConnectClubLogo className="h-12" />
         </div>
       </header>
 

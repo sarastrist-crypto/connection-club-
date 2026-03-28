@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/button';
+import ConnectClubLogo, { ConnectClubShield } from './ConnectClubLogo';
 import {
   LayoutDashboard,
   Briefcase,
@@ -15,8 +16,6 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
-
-const LOGO_URL = "https://static.prod-images.emergentagent.com/jobs/55e5192a-5621-4870-b0fb-67b6a7896070/images/bc25463b76696a92f7729053d65f4d88b5b22909c4986c5d19128dd1e1327b75.png";
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -55,7 +54,9 @@ export default function Layout({ children }) {
         >
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
-        <img src={LOGO_URL} alt="ConnectClub" className="h-8 ml-4" />
+        <div className="ml-4">
+          <ConnectClubShield className="h-10" />
+        </div>
       </header>
 
       {/* Sidebar */}
@@ -63,8 +64,8 @@ export default function Layout({ children }) {
         className={`sidebar ${sidebarOpen ? '' : 'sidebar-collapsed'} lg:translate-x-0`}
         data-testid="sidebar"
       >
-        <div className="p-6 border-b border-border">
-          <img src={LOGO_URL} alt="ConnectClub" className="h-10" />
+        <div className="p-4 border-b border-border">
+          <ConnectClubLogo className="h-14" />
         </div>
 
         <nav className="p-4 flex flex-col h-[calc(100vh-88px)]">

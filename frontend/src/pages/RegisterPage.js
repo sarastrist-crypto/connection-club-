@@ -4,9 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import ConnectClubLogo from '../components/ConnectClubLogo';
 import { Loader2, Mail, Lock, User, AlertCircle } from 'lucide-react';
-
-const LOGO_URL = "https://static.prod-images.emergentagent.com/jobs/55e5192a-5621-4870-b0fb-67b6a7896070/images/bc25463b76696a92f7729053d65f4d88b5b22909c4986c5d19128dd1e1327b75.png";
 
 function formatApiErrorDetail(detail) {
   if (detail == null) return "Something went wrong. Please try again.";
@@ -82,7 +81,9 @@ export default function RegisterPage() {
       {/* Right side - Form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img src={LOGO_URL} alt="ConnectClub" className="h-12 mx-auto" />
+          <div className="flex justify-center">
+            <ConnectClubLogo className="h-16" />
+          </div>
           <h1 className="mt-8 text-center text-3xl font-medium tracking-tight text-foreground">
             Create your account
           </h1>
