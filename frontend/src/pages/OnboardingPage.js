@@ -235,8 +235,8 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      {/* Content - with extra bottom padding for fixed footer */}
-      <main className="pt-28 pb-32 px-6">
+      {/* Content */}
+      <main className="pt-28 pb-8 px-6">
         <div className="max-w-2xl mx-auto">
           {/* Step 1: Basic Info */}
           {step === 1 && (
@@ -490,12 +490,9 @@ export default function OnboardingPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
-        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Navigation Buttons — directly below questions */}
+        <div className="mt-6 flex items-center justify-between">
           {step > 1 ? (
             <Button
               variant="ghost"
@@ -511,6 +508,7 @@ export default function OnboardingPage() {
           <Button
             onClick={handleNext}
             disabled={!canProceed() || loading}
+            size="lg"
             data-testid="onboarding-next"
           >
             {loading ? (
@@ -520,7 +518,8 @@ export default function OnboardingPage() {
             {step < 5 && <ChevronRight className="w-4 h-4 ml-2" />}
           </Button>
         </div>
-      </footer>
+        </div>
+      </main>
     </div>
   );
 }
