@@ -9,6 +9,8 @@ answer two different portfolio questions:
 | `connectclub_runway.py` | We're already funded. What happens if the member **referral loop drops off**? | `connectclub-runway-analysis.html` |
 | `bootstrap_launch.py` | We're **not** funded yet. What does launching ConnectClub from **zero capital** cost and return the portfolio? | `connectclub-bootstrap-launch.html` |
 
+Building another one of these? The repeatable procedure (ground the model in real data, render a brand-styled report, publish it, the capacity-bounding fix for viral-growth loops) is banked as the `/financial-model` skill in the `cobbled-works` repo (`.claude/skills/financial-model/`).
+
 ## Model 1 — 5-Year Runway (referral drop-off risk)
 
 Starts from a funded position ($1M seed, 200 members, 250 merchants,
