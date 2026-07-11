@@ -1,77 +1,74 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 380" width="1080" height="380">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 380" width="1150" height="380">
   <defs>
     <!-- Deep forest green — shield fill -->
     <linearGradient id="shieldGrad" x1="20%" y1="0%" x2="80%" y2="100%">
-      <stop offset="0%" style="stop-color:#0F3D22"/>
-      <stop offset="100%" style="stop-color:#071A0D"/>
+      <stop offset="0%" stop-color="#1A4A2E"/>
+      <stop offset="55%" stop-color="#0D2E1B"/>
+      <stop offset="100%" stop-color="#06180D"/>
     </linearGradient>
 
-    <!-- Gold — dollar sign and ornaments -->
+    <!-- Gold — dollar sign -->
     <linearGradient id="dollarGrad" x1="0%" y1="0%" x2="60%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFE070"/>
-      <stop offset="45%" style="stop-color:#D4A017"/>
-      <stop offset="100%" style="stop-color:#8A6000"/>
+      <stop offset="0%" stop-color="#FFE070"/>
+      <stop offset="45%" stop-color="#D4A017"/>
+      <stop offset="100%" stop-color="#8A6000"/>
     </linearGradient>
 
     <!-- Gold — border stroke -->
     <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#F5D060"/>
-      <stop offset="50%" style="stop-color:#C49010"/>
-      <stop offset="100%" style="stop-color:#8A6000"/>
+      <stop offset="0%" stop-color="#F5D060"/>
+      <stop offset="50%" stop-color="#C49010"/>
+      <stop offset="100%" stop-color="#8A6000"/>
     </linearGradient>
 
     <!-- Gold — wordmark Club -->
-    <linearGradient id="clubGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#E8B820"/>
-      <stop offset="100%" style="stop-color:#C08C08"/>
+    <linearGradient id="clubGrad" x1="0%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#F3CB5A"/>
+      <stop offset="52%" stop-color="#D4A017"/>
+      <stop offset="100%" stop-color="#A87B06"/>
     </linearGradient>
 
-    <!-- Effects -->
     <filter id="shieldShadow" x="-15%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#000000" flood-opacity="0.30"/>
+      <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#000000" flood-opacity="0.28"/>
     </filter>
 
-    <filter id="dollarGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="1 0.8 0 0 0.1 0.6 0.5 0 0 0.05 0 0 0 0 0 0 0 0 0.5 0" result="coloredBlur"/>
+    <filter id="dollarGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0.8 0 0 0.1  0.6 0.5 0 0 0.05  0 0 0 0 0  0 0 0 0.45 0" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-
-    <filter id="wordShadow" x="-5%" y="-10%" width="110%" height="130%">
-      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.10"/>
-    </filter>
   </defs>
 
-  <!-- Background (transparent) -->
-  <rect width="1080" height="380" fill="transparent"/>
+  <!-- Crown of gold points -->
+  <circle cx="120" cy="22" r="2.7" fill="#F5D060" opacity="0.45"/>
+  <circle cx="139" cy="15" r="3.6" fill="#F5D060" opacity="0.7"/>
+  <circle cx="160" cy="11" r="5" fill="#F5D060" opacity="0.95" filter="url(#dollarGlow)"/>
+  <circle cx="181" cy="15" r="3.6" fill="#F5D060" opacity="0.7"/>
+  <circle cx="200" cy="22" r="2.7" fill="#F5D060" opacity="0.45"/>
 
-  <!-- Shield Body -->
-  <path d="M 160,30 L 278,30 L 278,185 Q 278,250 160,330 Q 42,250 42,185 L 42,30 Z" fill="url(#shieldGrad)" filter="url(#shieldShadow)"/>
-  
-  <!-- Shield Borders -->
-  <path d="M 160,30 L 278,30 L 278,185 Q 278,250 160,330 Q 42,250 42,185 L 42,30 Z" fill="none" stroke="url(#borderGrad)" stroke-width="3.5" stroke-linejoin="round" opacity="0.75"/>
-  <path d="M 160,46 L 264,46 L 264,184 Q 264,240 160,312 Q 56,240 56,184 L 56,46 Z" fill="none" stroke="url(#borderGrad)" stroke-width="1.0" opacity="0.30"/>
+  <!-- Shield body -->
+  <path d="M 160 30 L 266 30 Q 280 30 280 44 L 280 184 Q 280 252 160 334 Q 40 252 40 184 L 40 44 Q 40 30 54 30 Z" fill="url(#shieldGrad)" filter="url(#shieldShadow)"/>
 
-  <!-- Crown Ornament -->
-  <circle cx="126" cy="40" r="2.8" fill="#F5D060" opacity="0.48"/>
-  <circle cx="143" cy="35" r="3.5" fill="#F5D060" opacity="0.68"/>
-  <circle cx="160" cy="31" r="5.0" fill="#F5D060" opacity="0.96" filter="url(#dollarGlow)"/>
-  <circle cx="177" cy="35" r="3.5" fill="#F5D060" opacity="0.68"/>
-  <circle cx="194" cy="40" r="2.8" fill="#F5D060" opacity="0.48"/>
+  <!-- Top gloss -->
+  <path d="M 40 44 Q 40 30 54 30 L 266 30 Q 280 30 280 44 L 280 88 Q 160 126 40 88 Z" fill="#FFFFFF" opacity="0.055"/>
 
-  <!-- Dollar Sign -->
-  <text x="160" y="232" font-family="Georgia, serif" font-size="190" font-weight="bold" text-anchor="middle" fill="url(#dollarGrad)" filter="url(#dollarGlow)">$</text>
+  <!-- Gold borders -->
+  <path d="M 160 30 L 266 30 Q 280 30 280 44 L 280 184 Q 280 252 160 334 Q 40 252 40 184 L 40 44 Q 40 30 54 30 Z" fill="none" stroke="url(#borderGrad)" stroke-width="3.5" stroke-linejoin="round" opacity="0.8"/>
+  <path d="M 160 46 L 264 46 L 264 184 Q 264 240 160 312 Q 56 240 56 184 L 56 46 Z" fill="none" stroke="url(#borderGrad)" stroke-width="1" opacity="0.32"/>
+
+  <!-- Dollar sign -->
+  <text x="160" y="238" text-anchor="middle" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="180" font-weight="600" fill="url(#dollarGrad)" filter="url(#dollarGlow)">$</text>
 
   <!-- Wordmark -->
-  <text x="316" y="215" font-family="Georgia, serif" font-size="108" font-weight="bold" fill="#0A2A18" letter-spacing="1.5" filter="url(#wordShadow)">Connect</text>
-  <text x="772" y="215" font-family="Georgia, serif" font-size="108" font-weight="bold" fill="url(#clubGrad)" letter-spacing="1.5" filter="url(#wordShadow)">Club</text>
+  <text x="332" y="214" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="120" font-weight="600" fill="#0C2B1A" textLength="452" lengthAdjust="spacingAndGlyphs">Connect</text>
+  <text x="800" y="214" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="120" font-weight="600" fill="url(#clubGrad)" textLength="252" lengthAdjust="spacingAndGlyphs">Club</text>
 
-  <!-- Horizontal Rule -->
-  <line x1="316" y1="238" x2="1040" y2="238" stroke="url(#borderGrad)" stroke-width="1.2" opacity="0.40"/>
+  <!-- Gold rule -->
+  <line x1="332" y1="242" x2="1052" y2="242" stroke="url(#borderGrad)" stroke-width="2.5" opacity="0.55"/>
 
   <!-- Tagline -->
-  <text x="316" y="272" font-family="Georgia, serif" font-size="26" font-weight="700" fill="#071A0D" letter-spacing="6.0">YOUR NETWORK. YOUR INCOME.</text>
+  <text x="332" y="278" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, monospace" font-size="23" font-weight="500" letter-spacing="8" fill="#47604F" textLength="720" lengthAdjust="spacing">YOUR NETWORK<tspan fill="#D4A017"> · </tspan>YOUR INCOME</text>
 </svg>

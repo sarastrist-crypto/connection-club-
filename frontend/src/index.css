@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -290,6 +290,64 @@
   .glass-header {
     @apply bg-white/70 backdrop-blur-xl border-b border-white/40;
   }
+}
+
+/* ── ConnectClub logo ───────────────────────────────────────────────── */
+
+/* Periodic gold glint that sweeps across the wordmark letterforms */
+.cc-logo-sheen {
+  transform: translateX(0) skewX(-18deg);
+  transform-box: view-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cc-logo-sheen {
+    animation: cc-sheen-sweep 9s cubic-bezier(0.55, 0, 0.3, 1) 1.4s infinite;
+  }
+}
+
+@keyframes cc-sheen-sweep {
+  0% {
+    transform: translateX(0) skewX(-18deg);
+  }
+  16%,
+  100% {
+    transform: translateX(1480px) skewX(-18deg);
+  }
+}
+
+/* Hero entrance for the auth/landing header */
+@media (prefers-reduced-motion: no-preference) {
+  .cc-hero-enter {
+    animation: cc-hero-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .cc-hero-enter-delayed {
+    animation: cc-hero-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+}
+
+@keyframes cc-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Soft radial halo behind the landing logo */
+.cc-logo-halo {
+  background:
+    radial-gradient(42% 60% at 50% 42%, rgba(212, 160, 23, 0.16), transparent 70%),
+    radial-gradient(60% 80% at 50% 50%, rgba(26, 74, 46, 0.1), transparent 72%);
+}
+
+.dark .cc-logo-halo {
+  background:
+    radial-gradient(42% 60% at 50% 42%, rgba(245, 208, 96, 0.12), transparent 70%),
+    radial-gradient(60% 80% at 50% 50%, rgba(60, 160, 100, 0.08), transparent 72%);
 }
 
 /* Dark mode overrides for hard-coded colors */
