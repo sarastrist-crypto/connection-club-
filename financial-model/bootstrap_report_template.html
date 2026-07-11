@@ -1,0 +1,596 @@
+<title>ConnectClub — Zero-Capital Launch Model</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --forest:#0B2A1E; --forest-2:#0F3D22; --forest-3:#14362D;
+    --gold:#D4A017; --gold-soft:#E8C25A;
+    --loss:#C0563B; --gain:#3E8E5A;
+    /* light theme (parchment with a green bias) */
+    --bg:#F5F2E8; --bg-2:#EFEBDC; --card:#FBF9F2; --line:#DCD6C4;
+    --ink:#14362D; --ink-2:#3C5248; --muted:#6B7B72;
+    --accent:var(--gold); --accent-ink:#8A6A0E;
+    --shadow:0 1px 2px rgba(20,54,45,.06),0 8px 24px rgba(20,54,45,.08);
+    --maxw:940px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#082017; --bg-2:#0B2A1E; --card:#0F3327; --line:#1E4636;
+      --ink:#EAF3ED; --ink-2:#B4C9BE; --muted:#7F9A8C;
+      --accent:var(--gold-soft); --accent-ink:#E8C25A;
+      --gain:#5FB483; --loss:#D9765C;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F5F2E8; --bg-2:#EFEBDC; --card:#FBF9F2; --line:#DCD6C4;
+    --ink:#14362D; --ink-2:#3C5248; --muted:#6B7B72;
+    --accent:var(--gold); --accent-ink:#8A6A0E; --gain:#3E8E5A; --loss:#C0563B;
+    --shadow:0 1px 2px rgba(20,54,45,.06),0 8px 24px rgba(20,54,45,.08);
+  }
+  :root[data-theme="dark"]{
+    --bg:#082017; --bg-2:#0B2A1E; --card:#0F3327; --line:#1E4636;
+    --ink:#EAF3ED; --ink-2:#B4C9BE; --muted:#7F9A8C;
+    --accent:var(--gold-soft); --accent-ink:#E8C25A; --gain:#5FB483; --loss:#D9765C;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .num{font-variant-numeric:tabular-nums}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;text-wrap:balance;line-height:1.15;letter-spacing:-.01em}
+  .eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+
+  /* header bar */
+  .topbar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .shield{width:26px;height:30px;flex:0 0 auto}
+  .brand b{font-family:Georgia,serif;font-weight:600;font-size:18px;letter-spacing:.02em}
+  .brand b span{color:var(--accent-ink)}
+  .themebtn{font:inherit;font-size:13px;cursor:pointer;color:var(--ink-2);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;display:inline-flex;gap:7px;align-items:center}
+  .themebtn:hover{border-color:var(--accent);color:var(--ink)}
+  .themebtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* hero */
+  header.hero{padding:68px 0 30px;position:relative;overflow:hidden}
+  header.hero:before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 70% at 88% -8%,color-mix(in srgb,var(--gold) 16%,transparent),transparent 60%)}
+  .hero h1{font-size:clamp(34px,6vw,58px);margin:14px 0 0}
+  .hero h1 em{font-style:normal;color:var(--accent-ink);border-bottom:3px solid var(--accent);padding-bottom:1px}
+  .lede{font-size:clamp(18px,2.4vw,22px);color:var(--ink-2);max-width:44ch;margin:22px 0 0}
+  .meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px}
+  .meta span{display:inline-flex;gap:7px;align-items:center}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+  /* verdict callout */
+  .verdict{margin:34px 0 8px;background:var(--card);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow)}
+  .verdict p{margin:0;font-size:19px}
+  .verdict .big{font-family:Georgia,serif;font-size:22px;color:var(--ink)}
+  .verdict b.g{color:var(--gain)} .verdict b.a{color:var(--accent-ink)}
+
+  /* section scaffold */
+  section{padding:44px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:0}
+  h2{font-size:clamp(24px,3.4vw,32px);margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 26px;max-width:62ch}
+
+  /* KPI grid */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .kpi .lbl{font-size:12px;color:var(--muted);letter-spacing:.02em;min-height:2.4em}
+  .kpi .v{font-family:Georgia,serif;font-size:28px;line-height:1.05;margin-top:8px}
+  .kpi .d{font-size:13px;margin-top:7px;font-weight:600}
+  .d.up{color:var(--gain)} .d.warn{color:var(--accent-ink)}
+  .kpi .base{font-size:12px;color:var(--muted);margin-top:3px}
+  .kpi.hero-kpi{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+
+  /* charts */
+  .chartcard{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:22px 20px 14px;box-shadow:var(--shadow)}
+  .chart-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .chart-h h3{font-size:19px;margin:0}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+  .legend i{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
+  .cwrap{position:relative;width:100%}
+  canvas{display:block;width:100%;height:auto}
+  .caption{color:var(--muted);font-size:13px;margin:12px 2px 0;max-width:70ch}
+  .caption b{color:var(--ink-2)}
+
+  /* two-col */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+  /* tables */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--card)}
+  th,td{padding:11px 14px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-family:ui-monospace,monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;border-bottom:1px solid var(--line)}
+  tbody tr+tr td{border-top:1px solid var(--line)}
+  tbody tr.hl{background:color-mix(in srgb,var(--gold) 10%,transparent)}
+  tbody tr.hl td:first-child{font-weight:700}
+  td .pos{color:var(--gain)} td .warn{color:var(--accent-ink)}
+  .assum td{white-space:normal;vertical-align:top}
+  .assum td:first-child{color:var(--ink-2);width:52%}
+  .assum td:last-child{font-family:ui-monospace,monospace;font-size:13px}
+
+  /* implications */
+  .points{display:grid;gap:14px;counter-reset:p}
+  .point{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px 18px 58px;
+    position:relative;box-shadow:var(--shadow)}
+  .point:before{counter-increment:p;content:counter(p);position:absolute;left:18px;top:18px;
+    width:26px;height:26px;border-radius:50%;background:var(--forest-2);color:var(--gold-soft);
+    font-family:ui-monospace,monospace;font-size:13px;font-weight:700;display:grid;place-items:center}
+  .point h3{font-size:17.5px;margin:0 0 4px}
+  .point p{margin:0;color:var(--ink-2);font-size:15.5px}
+
+  footer{padding:40px 0 70px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+  footer .disc{max-width:75ch}
+
+  @media (max-width:820px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .grid2{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){
+    body{font-size:16px}
+    .kpi .v{font-size:24px}
+    .kpis{grid-template-columns:1fr 1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="topbar"><div class="wrap">
+  <div class="brand">
+    <svg class="shield" viewBox="0 0 100 116" aria-hidden="true">
+      <path d="M50 4 L92 20 V54 C92 84 50 112 50 112 C50 112 8 84 8 54 V20 L50 4Z"
+        fill="var(--forest-2)" stroke="var(--gold)" stroke-width="4"/>
+      <text x="50" y="72" font-family="Georgia,serif" font-size="52" font-weight="700"
+        fill="var(--gold)" text-anchor="middle">$</text>
+    </svg>
+    <b>Connect<span>Club</span></b>
+  </div>
+  <button class="themebtn" id="themebtn" type="button" aria-label="Toggle color theme">
+    <span id="themeicon">◐</span><span id="themelabel">Theme</span>
+  </button>
+</div></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Financial Model · Zero-Capital Launch</div>
+    <h1>Start at zero. Build something that <em>pays for itself</em> — and pays everyone in it.</h1>
+    <p class="lede">What ConnectClub adds to the portfolio launched from nothing: the product already built, a founding sales force in place, and no marketing budget — just the referral engine doing all the growing.</p>
+    <div class="meta">
+      <span><i class="dot"></i>60-month horizon</span>
+      <span><i class="dot"></i>$0 starting capital · 60 founding reps · 0 merchants at start</span>
+      <span><i class="dot"></i>Grounded in the app's CCP + VA commission model</span>
+    </div>
+  </header>
+
+  <div class="verdict">
+    <p class="big">The capital ask is a <b class="a">$46K bridge</b> — not a war chest. From there, it pays for itself.</p>
+    <p style="margin-top:10px;color:var(--ink-2);font-size:16px">
+      No seed round, no paid acquisition — just a product that's already built and a sales force already selling.
+      Company revenue covers its own recruiting cost and overhead by <b class="g">month 9</b>; the vertical never
+      needs outside cash again after <b class="g">month 15</b>. By year five it has put
+      <b class="g">$18.4M</b> directly into the pockets of participating members and retained
+      <b class="g">$10.4M</b> for the company — <b class="g">$28.8M</b> of value created from a standing start.
+    </p>
+  </div>
+
+  <section>
+    <div class="eyebrow">The bottom line</div>
+    <h2>Zero to self-funding, in one launch</h2>
+    <p class="sub">Every dollar here is earned, not raised. The only capital question is how deep the ramp dips before the field's own production covers the company's own costs.</p>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The ramp</div>
+    <h2>The dip is small. The climb doesn't stop.</h2>
+    <p class="sub">Company cash position, month by month, starting at exactly $0. The shaded red is the only capital the portfolio is ever on the hook for — after that, the vertical funds itself and then compounds.</p>
+    <div class="chartcard">
+      <div class="chart-h">
+        <h3>Company cash position · 60 months</h3>
+        <div class="legend">
+          <span><i style="background:var(--loss)"></i>Funding gap</span>
+          <span><i style="background:var(--gain)"></i>Self-funded</span>
+        </div>
+      </div>
+      <div class="cwrap"><canvas id="cashChart" height="360"></canvas></div>
+      <p class="caption">Deepest point: <b>–$45,873 at month 8</b> — a bridge measured in tens of thousands, not millions. Operating breakeven lands <b>month 9</b>; cash never dips negative again after <b>month 15</b>. Everything right of that line is the portfolio getting paid back, with interest.</p>
+      <div class="chart-h" style="margin-top:22px">
+        <h3 style="font-size:15.5px;color:var(--ink-2)">Detail — the first 18 months, where the gap actually lives</h3>
+        <div class="legend">
+          <span><i style="background:var(--loss)"></i>Below zero</span>
+          <span><i style="background:var(--gain)"></i>Above zero</span>
+          <span><i style="background:var(--accent-ink)"></i>Breakeven (m9) &amp; self-funded (m15)</span>
+        </div>
+      </div>
+      <div class="cwrap"><canvas id="cashDetailChart" height="180"></canvas></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Where the value goes</div>
+    <h2>Two pools, both growing from nothing</h2>
+    <p class="sub">Every closed introduction pays twice: a commission to the member who closed it, and an override that stays with the company. Both compound as the merchant portfolio grows — the field is not competing with the company for the same dollar.</p>
+    <div class="chartcard">
+      <div class="chart-h">
+        <h3>Cumulative value created · 60 months</h3>
+        <div class="legend">
+          <span><i style="background:var(--gain)"></i>Retained by the company</span>
+          <span><i style="background:var(--gold)"></i>Distributed to members</span>
+        </div>
+      </div>
+      <div class="cwrap"><canvas id="valueChart" height="360"></canvas></div>
+      <p class="caption">By year five: <b style="color:var(--gain)">$10.4M</b> retained by the company, <b style="color:var(--accent-ink)">$18.4M</b> distributed to the field on top of it — <b>$28.8M</b> of total value created. Every member who's earning is also the company's best recruiter.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The compounding field</div>
+    <h2>The sales force is the growth engine</h2>
+    <p class="sub">With no paid channel, headcount and portfolio size are the whole story — and they're the same compounding curve, just offset by a month.</p>
+    <div class="grid2">
+      <div class="chartcard">
+        <div class="chart-h"><h3>Sales force (active reps)</h3></div>
+        <div class="cwrap"><canvas id="repsChart" height="300"></canvas></div>
+        <p class="caption">60 founding reps → <b style="color:var(--gain)">1,979</b> by year five, entirely from recruiting.</p>
+      </div>
+      <div class="chartcard">
+        <div class="chart-h"><h3>Merchant portfolio</h3></div>
+        <div class="cwrap"><canvas id="merChart" height="300"></canvas></div>
+        <p class="caption">0 → <b style="color:var(--gain)">9,671</b> recurring accounts, each a compounding asset.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">How the model works</div>
+    <h2>Every number ties back to the app</h2>
+    <p class="sub">ConnectClub is an ISO / super-agent channel: members are the closers, the company keeps an override on the residual portfolio they build. These are the marketed economics from <span class="mono">CommissionsPage.js</span> and the promotions in <span class="mono">server.py</span>, taken at the conservative end — with no paid channel, since there's no budget to fund one.</p>
+    <div class="grid2">
+      <div class="tablewrap"><table class="assum">
+        <thead><tr><th>Launch &amp; growth</th><th>Assumption</th></tr></thead>
+        <tbody id="assumGrow"></tbody>
+      </table></div>
+      <div class="tablewrap"><table class="assum">
+        <thead><tr><th>Unit economics</th><th>Assumption</th></tr></thead>
+        <tbody id="assumEcon"></tbody>
+      </table></div>
+    </div>
+    <p class="caption" style="margin-top:16px">Members earn <b>~25% of net residual</b> plus a <b>~$150–$500</b> upfront proc commission per Credit-Card-Processing close (and ~15% + ~$50–$100 on Virtual-Assistant intros). The company retains a conservative <b>$55/mo</b> override per active merchant and <b>$150</b> net per close, funding a lean bootstrap operation — no salaried acquisition team, since the product is already built and the field itself is the entire go-to-market motion.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">The lever that matters</div>
+    <h2>Recruiting intensity, not capital, sets the pace</h2>
+    <p class="sub">Hold everything else fixed and sweep only how hard the field recruits (new active reps per active rep per month). A more aggressive recruiting culture doesn't just grow faster — it shrinks the capital ask and speeds the payback at the same time.</p>
+    <div class="tablewrap"><table>
+      <thead><tr>
+        <th>Recruiting / mo</th><th>Funding gap</th><th>Breakeven</th>
+        <th>Self-funded</th><th>Yr-5 reps</th><th>5-yr total value</th>
+      </tr></thead>
+      <tbody id="sensBody"></tbody>
+    </table></div>
+    <p class="caption">At the low end (0.07), the gap is deeper and slower to close, and five-year value tops out near $8M. At the high end (0.18), the bridge shrinks to roughly $34K, the vertical is self-funded by month 10, and five-year value clears $450M. Recruiting culture — not a bigger check — is what the portfolio should invest in.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">What it means for the portfolio</div>
+    <h2>Reading the model</h2>
+    <div class="points">
+      <div class="point"><h3>The ask is small and bounded.</h3><p>A bridge of roughly $46K, for about eight months, is the entire capital exposure. That is a rounding error against what a funded launch would cost, and it's a knowable, worst-case number — not an open-ended burn.</p></div>
+      <div class="point"><h3>Participants get paid before the company does — on purpose.</h3><p>Members earn commissions the moment a merchant closes, well before the company's own take clears its costs. That is what keeps the founding sales force selling and recruiting through the thin early months — the incentive has to work first for the flywheel to work at all.</p></div>
+      <div class="point"><h3>The company's payback is the portfolio's payback.</h3><p>Every dollar retained after month 15 is uncommitted cash the broader organization can redeploy — into the next vertical, into more field incentives, or straight back to the balance sheet. That's the "energy": a business line that funds its own growth and then funds what comes next.</p></div>
+      <div class="point"><h3>This is a template, not a one-off.</h3><p>Product built once, a lean bootstrap operation, and a commission-aligned field that recruits itself — that pattern is repeatable for the next vertical the portfolio decides to cobble together, with the recruiting-intensity table above as the tuning guide.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="disc"><b>Method &amp; caveats.</b> A deterministic 60-month model built from the unit economics ConnectClub markets in-product, taken at the conservative end of the stated ranges, run from a $0 starting cash position with no paid-acquisition channel. Figures are undiscounted and assume the residual override and portfolio compound with only the modeled ~1.5%/mo runoff; they are a planning tool, not a forecast, and are sensitive to recruiting intensity, close rate, churn, and the override retained per merchant — all exposed as tunable assumptions. Member distributions are a parallel payout pool (the ISO's commission to the closer), not a company cash outflow — they are reported alongside company revenue, not subtracted from it. All approximate, per the app's own disclaimers. Generated from <span class="mono">bootstrap_launch.py</span> — edit the assumptions block and re-render. A companion model at <span class="mono">connectclub_runway.py</span> answers a different question: the risk to an already-funded plan if member referrals fade.</p>
+  </footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+/* ---------- theme ---------- */
+(function(){
+  const root=document.documentElement, btn=document.getElementById('themebtn'),
+        icon=document.getElementById('themeicon'), lab=document.getElementById('themelabel');
+  function cur(){ if(root.dataset.theme) return root.dataset.theme;
+    return matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'; }
+  function paint(){ const d=cur()==='dark'; icon.textContent=d?'☾':'☀';
+    lab.textContent=d?'Dark':'Light'; }
+  btn.addEventListener('click',()=>{ root.dataset.theme=cur()==='dark'?'light':'dark'; paint(); draw(); });
+  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{ if(!root.dataset.theme){paint();draw();} });
+  paint();
+})();
+function tok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* ---------- helpers ---------- */
+const fmtUSD=v=>(v<0?'-':'')+'$'+Math.abs(Math.round(v)).toLocaleString();
+const fmtK=v=>{const a=Math.abs(v);let s;if(a>=1e6)s='$'+(v/1e6).toFixed(a>=1e7?0:1)+'M';
+  else if(a>=1e3)s='$'+Math.round(v/1e3)+'K';else s='$'+Math.round(v);return s;};
+const fmtN=v=>Math.round(v).toLocaleString();
+
+/* ---------- KPI band ---------- */
+(function(){
+  const h=DATA.headline;
+  const cards=[
+    {lbl:'Capital required to launch (peak gap)',v:fmtUSD(h.deepest_funding_gap_cash),
+     d:'at month '+h.deepest_funding_gap_month,cls:'warn',base:'The only cash the portfolio backstops'},
+    {lbl:'Operating breakeven',v:'Month '+h.operating_breakeven_month,
+     d:'company revenue ≥ its own costs',cls:'up',base:'Every month after: net positive'},
+    {lbl:'Durable, self-funded',v:'Month '+h.durable_cash_positive_month,
+     d:'never dips negative again',cls:'up',base:'No further capital, ever'},
+    {lbl:'5-year distributed to members',v:fmtK(h.total_distributed_5yr),
+     d:'earned by participating reps',cls:'up',base:'Paid as commissions, from day one'},
+    {lbl:'5-year retained by the company',v:fmtK(h.total_retained_5yr),
+     d:'uncommitted, redeployable cash',cls:'up',base:'Ending cash: '+fmtK(h.ending_cash)},
+    {lbl:'5-year total value created',v:fmtK(h.total_value_created_5yr),
+     d:fmtN(h.ending_members)+' reps · '+fmtN(h.ending_merchants)+' merchants',cls:'up',base:'From $0 starting capital'},
+  ];
+  document.getElementById('kpis').innerHTML=cards.map(c=>
+    `<div class="kpi hero-kpi"><div class="lbl">${c.lbl}</div><div class="v num">${c.v}</div>
+     <div class="d ${c.cls} num">${c.d}</div><div class="base num">${c.base}</div></div>`).join('');
+})();
+
+/* ---------- assumptions ---------- */
+(function(){
+  const a=DATA.assumptions;
+  const grow=[
+    ['Starting cash',fmtUSD(a.start_cash)],
+    ['Founding sales force / merchants',a.founding_sales_force+' reps / '+a.start_merchants],
+    ['Paid acquisition',a.paid_adds_per_month===0?'none — $0 budget':a.paid_adds_per_month+'/mo'],
+    ['Recruiting coefficient',a.referral_coeff+' active reps/rep/mo'],
+    ['Rep churn',(a.member_churn*100).toFixed(0)+'% / mo'],
+    ['Referral reward (credits)',fmtUSD(a.referral_reward)+' / referral'],
+  ];
+  const econ=[
+    ['Closes per active rep',a.closes_per_member+' merchants / mo'],
+    ['Merchant residual runoff',(a.merchant_runoff*100).toFixed(1)+'% / mo'],
+    ['Company override per merchant',fmtUSD(a.cc_residual_per_merchant)+' / mo (recurring)'],
+    ['Company upfront per close',fmtUSD(a.cc_upfront_per_close)+' (one-time)'],
+    ['Member residual share',fmtUSD(a.member_residual_per_merchant)+'/mo (~25%)'],
+    ['Fixed opex (lean bootstrap)',fmtK(a.fixed_opex_start)+'/mo +'+(a.fixed_opex_growth*100).toFixed(1)+'%/mo'],
+  ];
+  const row=r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`;
+  document.getElementById('assumGrow').innerHTML=grow.map(row).join('');
+  document.getElementById('assumEcon').innerHTML=econ.map(row).join('');
+})();
+
+/* ---------- sensitivity table ---------- */
+(function(){
+  const rows=DATA.sensitivity.map(s=>{
+    const hl=Math.abs(s.coeff-DATA.assumptions.referral_coeff)<1e-9?' class="hl"':'';
+    return `<tr${hl}><td class="num">${s.coeff.toFixed(2)}</td>
+      <td class="num"><span class="warn">${fmtUSD(s.funding_gap)}</span></td>
+      <td class="num">m${s.breakeven_month}</td>
+      <td class="num">m${s.durable_month}</td>
+      <td class="num">${fmtN(s.ending_reps)}</td>
+      <td class="num"><span class="pos">${fmtK(s.total5)}</span></td></tr>`;
+  }).join('');
+  document.getElementById('sensBody').innerHTML=rows;
+})();
+
+/* ---------- charts (canvas) ---------- */
+function line(ctx,pts,color,w,dash){
+  ctx.save();ctx.beginPath();ctx.lineWidth=w;ctx.strokeStyle=color;
+  ctx.lineJoin='round';ctx.setLineDash(dash||[]);
+  pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.restore();
+}
+function setup(cv){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const cssW=cv.clientWidth, cssH=parseInt(cv.getAttribute('height'),10);
+  cv.width=cssW*dpr; cv.height=cssH*dpr;
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH};
+}
+function axes(ctx,pad,W,H,yMin,yMax,yfmt,xTicks,xfmt){
+  const line_=tok('--line'),muted=tok('--muted');
+  ctx.font='11px ui-monospace,monospace';ctx.fillStyle=muted;ctx.strokeStyle=line_;ctx.lineWidth=1;
+  const rows=5;
+  for(let i=0;i<=rows;i++){
+    const y=pad.t+(H-pad.t-pad.b)*i/rows;
+    const val=yMax-(yMax-yMin)*i/rows;
+    ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.globalAlpha=1;
+    ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(yfmt(val),pad.l-8,y);
+  }
+  ctx.textAlign='center';ctx.textBaseline='top';
+  xTicks.forEach(t=>{
+    const x=pad.l+(W-pad.l-pad.r)*t/60;
+    ctx.fillText(xfmt(t),x,H-pad.b+8);
+  });
+}
+function project(s,pad,W,H,yMin,yMax){
+  return s.map(p=>({x:pad.l+(W-pad.l-pad.r)*p.m/60,
+    y:pad.t+(H-pad.t-pad.b)*(yMax-p.v)/(yMax-yMin)}));
+}
+function endDot(ctx,pt,color){
+  ctx.save();ctx.fillStyle=color;ctx.beginPath();ctx.arc(pt.x,pt.y,3.5,0,7);ctx.fill();ctx.restore();
+}
+function series(key){return DATA.series.map(d=>({m:d.month,v:d[key]}));}
+
+function drawCash(){
+  const cv=document.getElementById('cashChart');if(!cv)return;
+  const {ctx,W,H}=setup(cv);
+  const pad={l:62,r:14,t:14,b:28};
+  const vals=DATA.series.map(d=>d.cash);
+  let yMax=Math.ceil(Math.max(...vals)/1e6)*1e6;
+  let yMin=Math.floor(Math.min(0,...vals)/1e4)*1e4-1e4;
+  axes(ctx,pad,W,H,yMin,yMax,fmtK,[0,12,24,36,48,60],t=>t===0?'0':'m'+t);
+  const pj=project(series('cash'),pad,W,H,yMin,yMax);
+  const zy=pad.t+(H-pad.t-pad.b)*(yMax-0)/(yMax-yMin);
+
+  // fill below zero (funding gap) in loss color, above zero in gain color
+  ctx.save();
+  ctx.beginPath();
+  pj.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(pj[pj.length-1].x,zy);ctx.lineTo(pj[0].x,zy);ctx.closePath();
+  ctx.save();ctx.clip();
+  const gGap=ctx.createLinearGradient(0,zy,0,H-pad.b);
+  gGap.addColorStop(0,'color-mix(in srgb,'+tok('--loss')+' 30%,transparent)');
+  gGap.addColorStop(1,'color-mix(in srgb,'+tok('--loss')+' 4%,transparent)');
+  ctx.fillStyle=gGap;ctx.fillRect(0,zy,W,H-pad.b-zy);
+  ctx.restore();
+  ctx.restore();
+
+  ctx.save();
+  ctx.beginPath();
+  pj.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(pj[pj.length-1].x,zy);ctx.lineTo(pj[0].x,zy);ctx.closePath();
+  ctx.save();ctx.clip();
+  const gPos=ctx.createLinearGradient(0,pad.t,0,zy);
+  gPos.addColorStop(0,'color-mix(in srgb,'+tok('--gain')+' 26%,transparent)');
+  gPos.addColorStop(1,'color-mix(in srgb,'+tok('--gain')+' 4%,transparent)');
+  ctx.fillStyle=gPos;ctx.fillRect(0,pad.t,W,zy-pad.t);
+  ctx.restore();
+  ctx.restore();
+
+  ctx.save();ctx.strokeStyle=tok('--muted');ctx.globalAlpha=.6;ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(pad.l,zy);ctx.lineTo(W-pad.r,zy);ctx.stroke();ctx.restore();
+
+  line(ctx,pj,tok('--gain'),2.6,[]);
+  endDot(ctx,pj[pj.length-1],tok('--gain'));
+}
+
+function drawCashDetail(){
+  const cv=document.getElementById('cashDetailChart');if(!cv)return;
+  const {ctx,W,H}=setup(cv);
+  const pad={l:62,r:14,t:10,b:24};
+  const window_=18;
+  const pts=DATA.series.filter(d=>d.month<=window_).map(d=>({m:d.month,v:d.cash}));
+  const vals=pts.map(p=>p.v);
+  let yMax=Math.ceil(Math.max(...vals,0)/1e4)*1e4+1e4;
+  let yMin=Math.floor(Math.min(...vals,0)/1e4)*1e4-1e4;
+  // custom axes scaled to this window (reuse axes() but with a window-local x mapping)
+  const line_=tok('--line'),muted=tok('--muted');
+  ctx.font='11px ui-monospace,monospace';ctx.fillStyle=muted;ctx.strokeStyle=line_;ctx.lineWidth=1;
+  const rows=4;
+  for(let i=0;i<=rows;i++){
+    const y=pad.t+(H-pad.t-pad.b)*i/rows;
+    const val=yMax-(yMax-yMin)*i/rows;
+    ctx.globalAlpha=.55;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.globalAlpha=1;
+    ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(fmtK(val),pad.l-8,y);
+  }
+  ctx.textAlign='center';ctx.textBaseline='top';
+  [0,3,6,9,12,15,18].forEach(t=>{
+    const x=pad.l+(W-pad.l-pad.r)*t/window_;
+    ctx.fillText('m'+t,x,H-pad.b+8);
+  });
+  const proj=pts.map(p=>({x:pad.l+(W-pad.l-pad.r)*p.m/window_,
+    y:pad.t+(H-pad.t-pad.b)*(yMax-p.v)/(yMax-yMin)}));
+  const zy=pad.t+(H-pad.t-pad.b)*(yMax-0)/(yMax-yMin);
+
+  ctx.save();ctx.beginPath();
+  proj.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(proj[proj.length-1].x,zy);ctx.lineTo(proj[0].x,zy);ctx.closePath();
+  ctx.save();ctx.clip();
+  ctx.fillStyle='color-mix(in srgb,'+tok('--loss')+' 22%,transparent)';
+  ctx.fillRect(0,zy,W,H-pad.b-zy);
+  ctx.restore();ctx.restore();
+
+  ctx.save();ctx.strokeStyle=tok('--muted');ctx.globalAlpha=.6;ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(pad.l,zy);ctx.lineTo(W-pad.r,zy);ctx.stroke();ctx.restore();
+
+  // color the line by sign: loss while cash<0, gain once it crosses back positive
+  const crossIdx=pts.findIndex(p=>p.v>=0);
+  if(crossIdx<=0){
+    line(ctx,proj,tok(pts[0].v>=0?'--gain':'--loss'),2.4,[]);
+  } else {
+    line(ctx,proj.slice(0,crossIdx+1),tok('--loss'),2.4,[]);
+    line(ctx,proj.slice(crossIdx-1<0?0:crossIdx),tok('--gain'),2.4,[]);
+  }
+  // mark breakeven (month 9) and durable (month 15) if within window
+  const markers=[[DATA.headline.operating_breakeven_month,'Breakeven'],
+                  [DATA.headline.durable_cash_positive_month,'Self-funded']];
+  markers.forEach(([mo,label])=>{
+    if(mo==null||mo>window_)return;
+    const px=pad.l+(W-pad.l-pad.r)*mo/window_;
+    const row=DATA.series.find(d=>d.month===mo);
+    const py=pad.t+(H-pad.t-pad.b)*(yMax-row.cash)/(yMax-yMin);
+    ctx.save();ctx.fillStyle=tok('--accent-ink');ctx.beginPath();ctx.arc(px,py,3.5,0,7);ctx.fill();ctx.restore();
+  });
+  const last=proj[proj.length-1];
+  endDot(ctx,last,tok(pts[pts.length-1].v>=0?'--gain':'--loss'));
+}
+
+function drawStackedValue(){
+  const cv=document.getElementById('valueChart');if(!cv)return;
+  const {ctx,W,H}=setup(cv);
+  const pad={l:58,r:14,t:14,b:28};
+  const retained=series('cum_retained'), distributed=series('cum_distributed');
+  const totals=DATA.series.map(d=>d.cum_retained+d.cum_distributed);
+  let yMax=Math.ceil(Math.max(...totals)/5e6)*5e6, yMin=0;
+  axes(ctx,pad,W,H,yMin,yMax,fmtK,[0,12,24,36,48,60],t=>t===0?'0':'m'+t);
+
+  const baseP=project(retained,pad,W,H,yMin,yMax);
+  const topSeries=DATA.series.map((d,i)=>({m:d.month,v:d.cum_retained+d.cum_distributed}));
+  const topP=project(topSeries,pad,W,H,yMin,yMax);
+
+  // bottom layer: retained
+  ctx.save();ctx.beginPath();
+  baseP.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(baseP[baseP.length-1].x,H-pad.b);ctx.lineTo(baseP[0].x,H-pad.b);ctx.closePath();
+  const g1=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  g1.addColorStop(0,'color-mix(in srgb,'+tok('--gain')+' 40%,transparent)');
+  g1.addColorStop(1,'color-mix(in srgb,'+tok('--gain')+' 8%,transparent)');
+  ctx.fillStyle=g1;ctx.fill();ctx.restore();
+  line(ctx,baseP,tok('--gain'),2.4,[]);
+
+  // top layer: retained+distributed, fill between base and top
+  ctx.save();ctx.beginPath();
+  topP.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  for(let i=baseP.length-1;i>=0;i--)ctx.lineTo(baseP[i].x,baseP[i].y);
+  ctx.closePath();
+  const g2=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  g2.addColorStop(0,'color-mix(in srgb,'+tok('--gold')+' 42%,transparent)');
+  g2.addColorStop(1,'color-mix(in srgb,'+tok('--gold')+' 10%,transparent)');
+  ctx.fillStyle=g2;ctx.fill();ctx.restore();
+  line(ctx,topP,tok('--gold'),2.6,[]);
+
+  endDot(ctx,baseP[baseP.length-1],tok('--gain'));
+  endDot(ctx,topP[topP.length-1],tok('--gold'));
+}
+
+function drawSimpleArea(id,key,fmt,startVal){
+  const cv=document.getElementById(id);if(!cv)return;
+  const {ctx,W,H}=setup(cv);
+  const pad={l:54,r:12,t:12,b:26};
+  const vals=DATA.series.map(d=>d[key]);
+  let yMax=Math.max(...vals)*1.05, yMin=0;
+  axes(ctx,pad,W,H,yMin,yMax,fmt,[0,12,24,36,48,60],t=>t===0?'0':'m'+t);
+  const pj=project(series(key),pad,W,H,yMin,yMax);
+  ctx.save();
+  const g=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
+  g.addColorStop(0,'color-mix(in srgb,'+tok('--gain')+' 28%,transparent)');
+  g.addColorStop(1,'color-mix(in srgb,'+tok('--gain')+' 3%,transparent)');
+  ctx.fillStyle=g;ctx.beginPath();
+  pj.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(pj[pj.length-1].x,H-pad.b);ctx.lineTo(pj[0].x,H-pad.b);ctx.closePath();ctx.fill();ctx.restore();
+  line(ctx,pj,tok('--gain'),2.6,[]);endDot(ctx,pj[pj.length-1],tok('--gain'));
+}
+
+function draw(){
+  drawCash();
+  drawCashDetail();
+  drawStackedValue();
+  drawSimpleArea('repsChart','members',fmtN);
+  drawSimpleArea('merChart','merchants',fmtN);
+}
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(draw,120);});
+draw();
+</script>
