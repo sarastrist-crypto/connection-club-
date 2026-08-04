@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import ConnectClubLogo from '../components/ConnectClubLogo';
+import ConnectClubLogo, { ConnectClubWordmark } from '../components/ConnectClubLogo';
 import { Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 
 function formatApiErrorDetail(detail) {
@@ -42,13 +42,14 @@ export default function LoginPage() {
       {/* Left side - Form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="flex justify-center">
-            <ConnectClubLogo className="h-24" />
+          <div className="relative flex justify-center cc-hero-enter">
+            <div className="cc-logo-halo pointer-events-none absolute -inset-x-16 -inset-y-10" aria-hidden="true" />
+            <ConnectClubLogo className="relative h-24 sm:h-28" />
           </div>
-          <h1 className="mt-8 text-center text-4xl font-medium tracking-tight text-foreground">
+          <h1 className="cc-hero-enter-delayed mt-8 text-center text-4xl font-medium tracking-tight text-foreground">
             Welcome back
           </h1>
-          <p className="mt-2 text-center text-base text-muted-foreground">
+          <p className="cc-hero-enter-delayed mt-2 text-center text-base text-muted-foreground">
             Sign in to access your opportunities
           </p>
         </div>
@@ -159,7 +160,7 @@ export default function LoginPage() {
             Your network should pay you.
           </h2>
           <p className="mt-4 text-xl opacity-90">
-            ConnectClub helps you turn relationships into income. Introduce businesses to solutions they need, and earn every time.
+            <ConnectClubWordmark tone="onDark" /> helps you turn relationships into income. Introduce businesses to solutions they need, and earn every time.
           </p>
         </div>
       </div>
